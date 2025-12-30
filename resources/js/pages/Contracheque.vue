@@ -276,14 +276,19 @@ const abrirRelatorio = () => {
                                 <th class="px-3 py-2">Base p/ IRRF</th>
                                 <th class="px-3 py-2">Total Vantagens</th>
                                 <th class="px-3 py-2">Saldo Devedor</th>
+                                <th class="px-3 py-2">Total Provendos</th>
+                                <th class="px-3 py-2">Total Descontos</th>                                
+                                <th class="px-3 py-2">Total Líquido</th>  
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td class="px-3 py-2">{{ formatCurrency(props.contra_cheque?.resumo?.base_irrf) }}</td>
                                 <td class="px-3 py-2">{{ formatCurrency(props.contra_cheque?.resumo?.tot_prov) }}</td>
-                                <td class="px-3 py-2">{{ formatCurrency(props.contra_cheque?.resumo?.saldo_devedor) }}
-                                </td>
+                                <td class="px-3 py-2">{{ formatCurrency(props.contra_cheque?.resumo?.saldo_devedor) }}</td>
+                                <td class="px-3 py-2">{{ formatCurrency(props.contra_cheque?.resumo?.tot_prov) }}</td>
+                                <td class="px-3 py-2">{{ formatCurrency(props.contra_cheque?.resumo?.tot_desc) }}</td>
+                                <td class="px-3 py-2">{{ formatCurrency(props.contra_cheque?.resumo?.tot_prov - props.contra_cheque?.resumo?.tot_desc) }}</td>
                             </tr>
                         </tbody>
                     </table>

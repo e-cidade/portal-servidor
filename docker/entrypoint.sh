@@ -28,21 +28,21 @@ if [ ! -d storage/logs ]; then
     mkdir storage/logs
 fi
 
-if [ ! -d var/www/html/vendor/mpdf/mpdf/tmp ]; then
+# if [ ! -d var/www/html/vendor/mpdf/mpdf/tmp ]; then
 
-    mkdir var/www/html/vendor/mpdf/mpdf/tmp
-    chown -R www-data:www-data /var/www/html/vendor/mpdf/mpdf/tmp
-    chmod -R 775 /var/www/html/vendor/mpdf/mpdf/tmp
+#     mkdir var/www/html/vendor/mpdf/mpdf/tmp
+#     chown -R www-data:www-data /var/www/html/vendor/mpdf/mpdf/tmp
+#     chmod -R 775 /var/www/html/vendor/mpdf/mpdf/tmp
 
-fi
+# fi
 
 
-if [ -d var/www/html/vendor/mpdf/mpdf/tmp ]; then
+# if [ -d var/www/html/vendor/mpdf/mpdf/tmp ]; then
 
-    chown -R www-data:www-data /var/www/html/vendor/mpdf/mpdf/tmp
-    chmod -R 775 /var/www/html/vendor/mpdf/mpdf/tmp
+#     chown -R www-data:www-data /var/www/html/vendor/mpdf/mpdf/tmp
+#     chmod -R 775 /var/www/html/vendor/mpdf/mpdf/tmp
 
-fi
+# fi
 
 npm run build
 

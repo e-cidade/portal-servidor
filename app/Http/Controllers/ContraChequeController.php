@@ -53,9 +53,19 @@ class ContraChequeController extends Controller
         $matriculas = $this->rhPessoalRepository->getMatriculasAtivas($numCgm, CODIGOINSTITUICAO);
         $rubricas = $this->rhPessoalRepository->getRubricas($request->tipo_folha, $request->ano, $request->mes, $request->registro);
 
+        $totais     = $rubricas['resumo'] ?? (object) [
+            'base_prev' => 0,
+            'base_irrf' => 0,
+            'tot_desc' => 0,
+            'tot_prov' => 0,
+            'saldo_devedor' => 0,
+            'base_irrf_ferias' => 0,
+        ];
+
         return Inertia::render('Contracheque', [
             'matriculas' => $matriculas,
-            'contra_cheque' => $rubricas
+            'contra_cheque' => $rubricas,
+            'totais' => $totais
         ]);
     }
 

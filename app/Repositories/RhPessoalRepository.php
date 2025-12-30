@@ -263,7 +263,8 @@ class RhPessoalRepository
             ->join('rhpessoalmov', function ($join) use ($mes, $ano) {
                 $join->on('rh02_regist', '=', 'rh01_regist')
                     ->where('rh02_anousu', '=', $ano)
-                    ->where('rh02_mesusu', '=', $mes);
+                    ->where('rh02_mesusu', '=', $mes)
+                    ->where( 'rh02_instit', '=',CODIGOINSTITUICAO);
             })
             ->join($tabela, function ($join) use ($sigla, $ano, $mes) {
                 $join->on("{$sigla}_regist", '=', 'rh01_regist')
@@ -275,6 +276,13 @@ class RhPessoalRepository
                 $join->on('rh27_rubric', '=', "{$sigla}_rubric")
                     ->on('rh27_instit', '=', 'rh02_instit');
             })
+            ->join('cfpess', function ($join) use ($mes, $ano) {
+                $join->where('r11_instit', '=', CODIGOINSTITUICAO)
+                    ->where('r11_anousu', '=', $ano)
+                    ->where('r11_mesusu', '=', $mes)
+                    ->whereNotNull('r11_dtfechamento');
+            })
+            
             ->where('rh01_regist', $matricula)
             ->orderBy("{$sigla}_pd")
             ->orderBy("{$sigla}_rubric")
