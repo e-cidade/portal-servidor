@@ -46,6 +46,6 @@ networks:
         driver: bridge
         ipam:
             config:
-                - subnet: 172.27.1.0/24
+                - subnet: 172.26.1.0/24
 volumes:
     redis-data:
