@@ -52,7 +52,7 @@ class ContraChequeController extends Controller
         $numCgm = Auth::user()->usuacgm->cgmlogin;
         $matriculas = $this->rhPessoalRepository->getMatriculasAtivas($numCgm, CODIGOINSTITUICAO);
         $rubricas = $this->rhPessoalRepository->getRubricas($request->tipo_folha, $request->ano, $request->mes, $request->registro);
-
+        $tiposFolha = $this->rhPessoalRepository->getTipoFolha($request->registro, $request->ano, $request->mes);
         $totais     = $rubricas['resumo'] ?? (object) [
             'base_prev' => 0,
             'base_irrf' => 0,
@@ -61,11 +61,17 @@ class ContraChequeController extends Controller
             'saldo_devedor' => 0,
             'base_irrf_ferias' => 0,
         ];
-
         return Inertia::render('Contracheque', [
             'matriculas' => $matriculas,
             'contra_cheque' => $rubricas,
-            'totais' => $totais
+            'tipos_folha' => $tiposFolha,
+            'totais' => $totais,
+            'filters' => [
+                            'registro' => (int) $request->registro,
+                            'ano' => (int) $request->ano,
+                            'mes' => (int) $request->mes,
+                            'tipo_folha' => (int) $request->tipo_folha,
+                        ],
         ]);
     }
 
@@ -76,10 +82,9 @@ class ContraChequeController extends Controller
         $numCgm = Auth::user()->usuacgm->cgmlogin;
         $matriculas = $this->rhPessoalRepository->getMatriculasAtivas($numCgm, CODIGOINSTITUICAO);
         $tiposFolha = $this->rhPessoalRepository->getTipoFolha($request->registro, $request->ano, $request->mes);
-
         return Inertia::render('Contracheque', [
             'matriculas' => $matriculas,
-            'tipos_folha' => $tiposFolha
+            'tipos_folha' => $tiposFolha,
         ]);
     }
 

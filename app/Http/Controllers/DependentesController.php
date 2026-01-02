@@ -29,7 +29,7 @@ class DependentesController extends Controller
             $dependentes = $this->rhPessoalRepository->getDependentes($matricula->rh01_regist, $matricula->rh02_anousu, $matricula->rh02_mesusu, CODIGOINSTITUICAO) ?? (object) [];
         }
         return Inertia::render('Dependentes', [
-            'dependentes' => $dependentes ? [$dependentes] : [],
+            'dependentes' => $dependentes ? $dependentes : [],
         ]);
     }
 

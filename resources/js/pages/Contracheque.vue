@@ -44,6 +44,13 @@ interface TipoFolha {
     descr: string,
 }
 
+interface Filter {
+    registro: number;
+    ano: number;
+    mes: number;
+    tipo_folha: number;
+}
+
 const props = defineProps<{
     instituicao: Instituicao;
     matriculas?: Periodo[];
@@ -54,6 +61,7 @@ const props = defineProps<{
     tipos_folha?: TipoFolha[],
     vinculo?: string;
     contra_cheque?: Rubricas;
+    filters: Filter
 }>();
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -65,10 +73,10 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 
 const form = useForm<{ tipo_folha: number , registro: number, ano: number, mes: number }>({
-    tipo_folha: 0,
-    registro: 0,
-    ano: 0,
-    mes: 0,
+    tipo_folha: props.filters?.tipo_folha ?? 0,
+    registro: props.filters?.registro ?? 0,
+    ano: props.filters?.ano ?? 0,
+    mes: props.filters?.mes ?? 0,
 })
 
 const submit = (e: Event) => {
@@ -114,16 +122,6 @@ const isDisabled = computed(() => {
     return form.ano === 0 || form.mes === 0 || form.tipo_folha === 0
 })
 
-// opcional: resetar o mês quando mudar o ano
-watch(() => form.ano, () => {
-    form.mes = 0;
-    form.tipo_folha = 0;
-});
-
-watch(() => form.mes, () => {
-    form.tipo_folha = 0;
-});
-
 // Sempre que todos os campos tiverem valor, faz o POST
 watch(
     () => [form.registro, form.ano, form.mes],
@@ -166,7 +164,7 @@ const abrirRelatorio = () => {
                 <div class="flex flex-col sm:flex-row gap-4 sm:gap-2 space-y-4 sm:space-y-0 p-5">
                     <div class="flex flex-col">
                         <Label class="p-2 font-semibold text-ring/100">Matrícula:</Label>
-                        <select id="registro" v-model="form.registro" required
+                        <select id="registro" v-model.number="form.registro" required 
                             class="border border-ring/50 rounded-sm px-6 py-2 bg-white text-sm text-ring/100 focus:outline-none focus:ring-2 focus:ring-customprimarybutton">
                             <option :value="0">Selecione a matrícula</option>
                             <option v-for="(registro, index) in registros" :key="index" :value="registro">
@@ -176,7 +174,7 @@ const abrirRelatorio = () => {
                     </div>
                     <div class="flex flex-col">
                         <Label class="p-2 font-semibold text-ring/100">Ano:</Label>
-                        <select id="ano" v-model="form.ano" required
+                        <select id="ano" v-model.number="form.ano" required @change="form.mes = 0; form.tipo_folha = 0"
                             class="border border-ring/50 rounded-sm px-6 py-2 bg-white text-sm text-ring/100 focus:outline-none focus:ring-2 focus:ring-customprimarybutton">
                             <option :value="0">Selecione o ano</option>
                             <option v-for="(ano, index) in anosUnicos" :key="index" :value="ano">
@@ -186,7 +184,7 @@ const abrirRelatorio = () => {
                     </div>
                     <div class="flex flex-col">
                         <Label class="p-2 font-semibold text-ring/100">Mês:</Label>
-                        <select id="mes" v-model="form.mes" required
+                        <select id="mes" v-model.number="form.mes" required @change="form.tipo_folha = 0"
                             class="border border-ring/50 rounded-sm px-6 py-2 bg-white text-sm text-ring/100 focus:outline-none focus:ring-2 focus:ring-customprimarybutton">
                             <option :value="0">Selecione o mês</option>
                             <option v-for="(mes, index) in mesUnicos" :key="index" :value="mes" class="text-ring/100">
@@ -196,7 +194,7 @@ const abrirRelatorio = () => {
                     </div>
                     <div class="flex flex-col">
                         <Label class="p-2 font-semibold text-ring/100">Tipo de Folha:</Label>
-                        <select v-model="form.tipo_folha" :disabled="!props.tipos_folha?.length"
+                        <select v-model.number="form.tipo_folha" 
                             class="border border-ring/50 rounded-sm px-6 py-2 bg-white text-sm text-ring/100 focus:outline-none focus:ring-2 focus:ring-customprimarybutton">
                             <option v-for="tipo in props.tipos_folha" :key="tipo.codigo" :value="tipo.codigo">{{
                                 tipo.descr }}</option>
@@ -269,10 +267,10 @@ const abrirRelatorio = () => {
 
                 <!-- Resumo -->
                 <div class="bg-white mt-6 border border-ring/10 rounded">
-                    <div class="bg-ring/30 font-bold px-4 py-2 text-ring/100">RESUMO</div>
+                    <div class="bg-ring/30 font-bold px-4 py-2 ">RESUMO</div>
                     <table class="w-full text-x-sm border-collapse">
                         <thead>
-                            <tr class="bg-ring/10 text-ring/100 text-left">
+                            <tr class="bg-ring/10  text-left">
                                 <th class="px-3 py-2">Base p/ IRRF</th>
                                 <th class="px-3 py-2">Total Vantagens</th>
                                 <th class="px-3 py-2">Saldo Devedor</th>

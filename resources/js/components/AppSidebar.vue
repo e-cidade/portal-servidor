@@ -23,11 +23,11 @@ const mainNavItems: NavItem[] = [
         href: '/dependentes',
         icon: PersonStanding,
     },
-    {
-        title: 'Férias',
-        href: '/ferias',
-        icon: TreePalm,
-    },
+    // {
+    //     title: 'Férias',
+    //     href: '/ferias',
+    //     icon: TreePalm,
+    // },
     {
         title: 'Contra Cheque',
         href: '/contracheque',
