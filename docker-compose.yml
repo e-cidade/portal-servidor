@@ -25,7 +25,7 @@ services:
             - '.:/var/www/html'
             - ./.git:/var/www/html/.git
         networks:
-            - transparencia
+            - portaltransparencia_pm_transparencia
     redis:
          image: 'redis:alpine'
          container_name: portalservidor_redis
@@ -34,7 +34,7 @@ services:
          volumes:
              - 'redis-data:/data'
          networks:
-             - transparencia
+             - portaltransparencia_pm_transparencia
          healthcheck:
            test: ["CMD", "redis-cli", "ping"]
            retries: 3
@@ -42,7 +42,7 @@ services:
 
 
 networks:
-    transparencia:
+    portaltransparencia_pm_transparencia:
         external: true
 volumes:
     redis-data:
