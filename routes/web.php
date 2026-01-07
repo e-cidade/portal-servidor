@@ -6,7 +6,6 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DependentesController;
 use App\Http\Controllers\FeriasController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 Route::get('/', [AuthenticatedSessionController::class, 'create'])->name('home');
 

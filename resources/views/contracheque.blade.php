@@ -225,7 +225,7 @@
     <table>
       <tbody>
         <tr>
-          <th style="width: 65%;">Base INSS</th>
+          <th style="width: 65%;">Base Previdência</th>
           <td class="num">{{ $moeda($totais['base_prev']) }}</td>
         </tr>
         <tr>

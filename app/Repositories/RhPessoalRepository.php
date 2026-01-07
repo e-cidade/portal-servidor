@@ -106,10 +106,17 @@ class RhPessoalRepository
     {
         return DB::table('rhpessoal')
             ->join('rhpessoalmov', 'rh02_regist', '=', 'rh01_regist')
+            ->join('gerfsal', function ($join) {
+                $join->on('r14_instit', '=', 'rh01_instit')
+                    ->on('r14_anousu', '=', 'rh02_anousu')
+                    ->on('r14_mesusu', '=', 'rh02_mesusu')
+                    ->on('r14_regist', '=', 'rh01_regist');                    
+            })
             ->leftJoin('rhpesrescisao', 'rh05_seqpes', '=', 'rh02_seqpes')
             ->distinct('rh01_regist', 'rh02_anousu', 'rh02_mesusu')
             ->select('rh01_regist', 'rh02_anousu', 'rh02_mesusu')
             ->where('rh01_instit', '=', $intituicao)
+            
             ->where('rh01_numcgm', '=', $numcgm)->get();
     }
 

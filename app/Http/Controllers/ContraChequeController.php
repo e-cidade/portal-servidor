@@ -36,7 +36,6 @@ class ContraChequeController extends Controller
 
     public function index(): Response
     {
-
         $numCgm = Auth::user()->usuacgm->cgmlogin;
         $matriculas = $this->rhPessoalRepository->getMatriculasAtivas($numCgm, CODIGOINSTITUICAO);
 

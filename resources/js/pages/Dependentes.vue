@@ -15,8 +15,54 @@ interface Dependente {
         rh31_dtnasc: Date,
         rh31_sexo: string,
         rh16_pis: string,
-        rh21_descr: string
+        rh21_descr: string,
+        rh31_depend: string,
+        rh31_gparen: string,
+        rh31_irf: string,
 }
+
+// Definir o tipo
+type ParentescoCode = 'C' | 'F' | 'P' | 'M' | 'A';
+
+// Criar o objeto tipado
+const parentesco: Record<ParentescoCode, string> = {
+  'C': 'Cônjuge',
+  'F': 'Filho',
+  'P': 'Pai',
+  'M': 'Mãe',
+  'A': 'Avó'
+};
+
+// Função helper tipada
+const getParentesco = (codigo?: string): string => {
+  return parentesco[codigo as ParentescoCode] || 'Outros';
+};
+
+type DependenteCode = 'C' | 'S';
+const dependente: Record<DependenteCode, string> = {
+    'C': 'Cálculo',
+    'S': 'Sempre dependente'
+}
+const getDependente = (codigo?: string): string => {
+    return dependente[codigo as DependenteCode] || 'Não dependente'
+}
+
+type DependenteIRFCode = '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7';
+
+const dependenteIRF: Record<DependenteIRFCode, string> = {
+  '0': 'Não dependente',
+  '1': 'Cônjuge, Companheiro(a)',
+  '2': 'Filho(a)/Enteado(a), até 21 anos de idade',
+  '3': 'Filho(a) ou enteado(a), 24 anos de idade cursando ensino superior',
+  '4': 'Irmão(ã), neto(a) ou bisneto(a), até 21 anos',
+  '5': 'Irmão(ã), neto(a) ou bisneto(a), de 21 a 24 anos c/ensino superior',
+  '6': 'Pais, avós e bisavós',
+  '7': 'Menor pobre até 21 anos, com a guarda judicial'
+};
+
+const getDependenteIRF = (codigo?: string): string => {
+  return dependenteIRF[codigo as DependenteIRFCode] || 'Pessoa absolutamente incapaz';
+};
 
 defineProps<{
     instituicao: Instituicao;
@@ -47,9 +93,9 @@ const breadcrumbs: BreadcrumbItem[] = [
                         <div class="grid grid-cols-3 gap-x-3 gap-y-1 p-1">
                             <Info label="Nome:" :value="dependente?.rh31_nome" />
                             <Info label="Data Nascimento" :value="formatDate(dependente?.rh31_dtnasc)" />
-                            <Info label="Parentesco:" :value="dependente?.rh31_sexo" />
-                            <Info label="Salário Família:" :value="dependente?.rh16_pis" />
-                            <Info label="Dep. IRRF: " :value="dependente?.rh21_descr" class="col-span-2" />
+                            <Info label="Parentesco:" :value="getParentesco(dependente?.rh31_gparen)" />
+                            <Info label="Salário Família:" :value="getDependente(dependente?.rh31_depend)" />   
+                            <Info label="Dependente IRRF:" :value="getDependenteIRF(dependente?.rh31_irf)" />                                             
                         </div>        
                     </div>
                 
