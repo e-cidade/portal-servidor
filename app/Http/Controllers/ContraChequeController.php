@@ -38,7 +38,7 @@ class ContraChequeController extends Controller
     {
         $numCgm = Auth::user()->usuacgm->cgmlogin;
         $matriculas = $this->rhPessoalRepository->getMatriculasAtivas($numCgm, CODIGOINSTITUICAO);
-
+// dd($matriculas);
         return Inertia::render('Contracheque', [
             'matriculas' => $matriculas,
         ]);

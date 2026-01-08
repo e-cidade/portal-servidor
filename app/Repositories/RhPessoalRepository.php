@@ -104,20 +104,18 @@ class RhPessoalRepository
      */
     public function getMatriculasAtivas(int $numcgm, int $intituicao)
     {
-        return DB::table('rhpessoal')
-            ->join('rhpessoalmov', 'rh02_regist', '=', 'rh01_regist')
-            ->join('gerfsal', function ($join) {
-                $join->on('r14_instit', '=', 'rh01_instit')
-                    ->on('r14_anousu', '=', 'rh02_anousu')
-                    ->on('r14_mesusu', '=', 'rh02_mesusu')
-                    ->on('r14_regist', '=', 'rh01_regist');                    
-            })
-            ->leftJoin('rhpesrescisao', 'rh05_seqpes', '=', 'rh02_seqpes')
-            ->distinct('rh01_regist', 'rh02_anousu', 'rh02_mesusu')
-            ->select('rh01_regist', 'rh02_anousu', 'rh02_mesusu')
-            ->where('rh01_instit', '=', $intituicao)
-            
-            ->where('rh01_numcgm', '=', $numcgm)->get();
+         $sql = "select distinct rh02_regist as regist, rh02_anousu as anousu, rh02_mesusu as mesusu
+                           from rhpessoalmov 
+                                inner join rhpessoal on rh02_regist=rh01_regist
+                                left join rhpesrescisao on rh05_seqpes = rh02_seqpes
+                                LEFT JOIN cfpess ON (rh02_anousu,rh02_mesusu) = (r11_anousu,r11_mesusu) AND ((r11_dtfechamento+r11_diasliberarcontracheque) <= current_date OR r11_dtfechamento IS NULL)
+                          where rh01_numcgm  = {$numcgm}                         
+                            and rh02_instit  = {$intituicao}
+                            and case when rh02_anousu = fc_anofolha({$intituicao}) 
+                                      and rh02_mesusu = fc_mesfolha({$intituicao}) then false else true end
+                          order by rh02_mesusu desc";
+
+          return DB::query()->from(DB::raw("($sql) as t"))->get();
     }
 
 

@@ -1,13 +1,10 @@
 <script setup lang="ts">
-import InputError from '@/components/InputError.vue';
-import Input from '@/components/ui/input/Input.vue';
 import Label from '@/components/ui/label/Label.vue';
-import Select from '@/components/ui/select/Select.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Instituicao, type BreadcrumbItem } from '@/types';
 import { Head, useForm, router } from '@inertiajs/vue3';
 import { formatCurrency } from '@/utils/formatters';
-import { ref, computed, watch, reactive } from 'vue';
+import { computed, watch, reactive } from 'vue';
 
 
 interface Rubrica {
@@ -34,9 +31,9 @@ interface Rubricas {
 }
 
 interface Periodo {
-    rh01_regist: number;
-    rh02_anousu: number;
-    rh02_mesusu: number;
+    regist: number;
+    anousu: number;
+    mesusu: number;
 }
 
 interface TipoFolha {
@@ -90,7 +87,7 @@ const submit = (e: Event) => {
 
 
 const registros = computed(() => {
-    return [...new Set(props.matriculas?.map(r => r.rh01_regist))];
+    return [...new Set(props.matriculas?.map(r => r.regist))];
 });
 
 const anos = computed(() => {
@@ -99,8 +96,8 @@ const anos = computed(() => {
     return [
         ...new Set(
             (props.matriculas ?? [])
-                .filter(r => r.rh01_regist === form.registro)
-                .map(r => r.rh02_anousu)
+                .filter(r => r.regist === form.registro)
+                .map(r => r.anousu)
         )
     ];
 });
@@ -113,8 +110,8 @@ const anosUnicos = computed(() => {
 
 const mesUnicos = computed(() => {
     if (!form.ano) return [];
-    return props.matriculas?.filter(r => r.rh02_anousu === form.ano)
-        .map(r => r.rh02_mesusu);
+    return props.matriculas?.filter(r => r.anousu === form.ano)
+        .map(r => r.mesusu);
 });
 
 // botão só habilita se o form estiver válido
@@ -133,7 +130,7 @@ watch(
                 preserveScroll: true,
                 preserveState: true,
                 preserveUrl: true,
-                only: ['tipos_folha'], // atualiza só essa prop
+                only: ['tipos_folha' , 'contra_cheque'], // atualiza só essa prop
                 replace: true,        // não cria histórico
             })
         }
