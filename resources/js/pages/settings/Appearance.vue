@@ -3,7 +3,7 @@ import { Head } from '@inertiajs/vue3';
 
 import AppearanceTabs from '@/components/AppearanceTabs.vue';
 import HeadingSmall from '@/components/HeadingSmall.vue';
-import { type BreadcrumbItem } from '@/types';
+import {Instituicao, type BreadcrumbItem } from '@/types';
 
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
@@ -14,10 +14,14 @@ const breadcrumbItems: BreadcrumbItem[] = [
         href: '/settings/appearance',
     },
 ];
+
+defineProps<{
+    instituicao: Instituicao;
+}>();
 </script>
 
 <template>
-    <AppLayout :breadcrumbs="breadcrumbItems">
+    <AppLayout :breadcrumbs="breadcrumbItems" :instituicao="instituicao">
         <Head title="Appearance settings" />
 
         <SettingsLayout>

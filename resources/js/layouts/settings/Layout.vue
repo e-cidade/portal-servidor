@@ -10,10 +10,10 @@ const sidebarNavItems: NavItem[] = [
         title: 'Meus Dados',
         href: '/settings/profile',
     },
-    // {
-    //     title: 'Senhas',
-    //     href: '/settings/password',
-    // },
+    {
+        title: 'Senhas',
+        href: '/settings/password',
+    },
 
 ];
 

@@ -9,7 +9,7 @@ import HeadingSmall from '@/components/HeadingSmall.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { type BreadcrumbItem } from '@/types';
+import {Instituicao, type BreadcrumbItem } from '@/types';
 
 const breadcrumbItems: BreadcrumbItem[] = [
     {
@@ -18,6 +18,14 @@ const breadcrumbItems: BreadcrumbItem[] = [
     },
 ];
 
+interface Props {
+    mustVerifyEmail: boolean;
+    status?: string;
+    instituicao: Instituicao;
+}
+
+defineProps<Props>();
+    
 const passwordInput = ref<HTMLInputElement | null>(null);
 const currentPasswordInput = ref<HTMLInputElement | null>(null);
 
@@ -51,7 +59,7 @@ const updatePassword = () => {
 </script>
 
 <template>
-    <AppLayout :breadcrumbs="breadcrumbItems">
+    <AppLayout :breadcrumbs="breadcrumbItems" :instituicao="instituicao">
         <Head title="Alterar Senha" />
 
         <SettingsLayout>
@@ -101,7 +109,8 @@ const updatePassword = () => {
                     </div>
 
                     <div class="flex items-center gap-4">
-                        <Button :disabled="form.processing">SALVAR</Button>
+                        <Button class="bg-green-700 cursor-pointer group relative flex justify-center py-2.5 px-4 border border-transparent text-sm font-medium rounded-md text-white  from-customprimarybutton to-customsecondarybutton hover:opacity-90 focus:outline-none hover:bg-green-600 focus:ring-offset-2 focus:ring-customprimarybutton transition-all duration-200"
+                         :disabled="form.processing">SALVAR</Button>
 
                         <Transition
                             enter-active-class="transition ease-in-out"

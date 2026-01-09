@@ -4,13 +4,17 @@ import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { Instituicao, type NavItem } from '@/types';
-import { Link } from '@inertiajs/vue3';
-import { LayoutGrid , PersonStanding, TreePalm, DollarSign} from 'lucide-vue-next';
+import { Link, router } from '@inertiajs/vue3';
+import { LayoutGrid , PersonStanding, TreePalm, DollarSign, LockKeyhole, LogOut} from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 
 defineProps<{
     instituicao: Instituicao;
 }>();
+
+const handleLogout = () => {
+    router.flushAll();
+};
 
 const mainNavItems: NavItem[] = [
     {
@@ -33,6 +37,13 @@ const mainNavItems: NavItem[] = [
         href: '/contracheque',
         icon: DollarSign,
     },
+    
+    {
+        title: 'Alterar Senha',
+        href: '/settings/password',
+        icon: LockKeyhole,
+    },
+
     // AINDA NÃO SERA DIPONIVEL
     // {
     //     title: 'Rendimentos IRRF',
@@ -70,7 +81,17 @@ const mainNavItems: NavItem[] = [
         </SidebarHeader>
 
         <SidebarContent>
-            <NavMain :items="mainNavItems" />
+            <NavMain :items="mainNavItems" />                     
+       
+            <SidebarMenuItem class="px-2 py-0">
+                <SidebarMenuButton as-child >
+                    <Link class="block w-full" method="post" :href="route('logout')" @click="handleLogout" as="button">
+                        <LogOut />
+                        Sair
+                    </Link>
+                </SidebarMenuButton>
+            </SidebarMenuItem>
+    
         </SidebarContent>
 
         <SidebarFooter>
