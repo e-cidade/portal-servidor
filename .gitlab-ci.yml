@@ -1,0 +1,222 @@
+stages:
+  - deploy_wave_1
+  - deploy_wave_2
+  - deploy_wave_3
+  - deploy_wave_4
+
+before_script:
+  - 'which ssh-agent'
+  - 'eval $(ssh-agent -s)'
+  - 'echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+
+# Template base (não roda sozinho)
+.deploy_template:
+  tags:
+    - contass-vpn
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: on_success
+  script:
+    - >
+      ssh ${SSH_USER}@${SSH_HOST}
+      "cd /opt/contass/portal-servidor
+      && git pull origin main
+      && docker compose down
+      && docker compose up -d
+      ${EXTRA_CMD}"
+
+# -------------------------
+# WAVE 1 (5)
+# -------------------------
+# pmserranopolis:
+#   stage: deploy_wave_1
+#   extends: .deploy_template
+#   variables:
+#     SSH_USER: "contass"
+#     SSH_HOST: "10.251.0.4"
+#     EXTRA_CMD: ""
+#   environment:
+#     name: production/pmserranopolis
+#     deployment_tier: production
+
+# pmmontalvania:
+#   stage: deploy_wave_1
+#   extends: .deploy_template
+#   variables:
+#     SSH_USER: "contass"
+#     SSH_HOST: "10.251.0.15"
+#     EXTRA_CMD: ""
+#   environment:
+#     name: production/pmmontalvania
+#     deployment_tier: production
+
+pmpirapora:
+  stage: deploy_wave_1
+  extends: .deploy_template
+  variables:
+    SSH_USER: "contass"
+    SSH_HOST: "10.251.0.18"
+    EXTRA_CMD: ""
+  environment:
+    name: production/pmpirapora
+    deployment_tier: production
+
+# codanorte:
+#   stage: deploy_wave_1
+#   extends: .deploy_template
+#   variables:
+#     SSH_USER: "contass"
+#     SSH_HOST: "10.251.0.41"
+#     EXTRA_CMD: ""
+#   environment:
+#     name: production/codanorte
+#     deployment_tier: production
+
+# pmsaogoncalodoriopreto:
+#   stage: deploy_wave_1
+#   extends: .deploy_template
+#   variables:
+#     SSH_USER: "contass"
+#     SSH_HOST: "10.251.0.21"
+#     EXTRA_CMD: ""
+#   environment:
+#     name: production/pmsaogoncalodoriopreto
+#     deployment_tier: production
+
+# pmsaoromao:
+#   stage: deploy_wave_1
+#   extends: .deploy_template
+#   variables:
+#     SSH_USER: "contass"
+#     SSH_HOST: "10.251.0.24"
+#     EXTRA_CMD: ""
+#   environment:
+#     name: production/pmsaoromao
+#     deployment_tier: production
+
+# pmgraomogol:
+#   stage: deploy_wave_1
+#   extends: .deploy_template
+#   variables:
+#     SSH_USER: "contass"
+#     SSH_HOST: "10.251.0.11"
+#     EXTRA_CMD: ""
+#   environment:
+#     name: production/pmgraomogol
+#     deployment_tier: production
+
+# pmubai:
+#   stage: deploy_wave_1
+#   extends: .deploy_template
+#   variables:
+#     SSH_USER: "contass"
+#     SSH_HOST: "10.251.0.23"
+#     EXTRA_CMD: ""
+#   environment:
+#     name: production/pmubai
+#     deployment_tier: production
+
+# pmsaojoaomissoes:
+#   stage: deploy_wave_1
+#   extends: .deploy_template
+#   variables:
+#     SSH_USER: "contass"
+#     SSH_HOST: "172.31.212.161"
+#     EXTRA_CMD: ""
+#   environment:
+#     name: production/pmsaojoaomissoes
+#     deployment_tier: production
+
+# # -------------------------
+# # WAVE 3 (5)
+# # -------------------------
+# pmsaofrancisco:
+#   stage: deploy_wave_1
+#   extends: .deploy_template
+#   variables:
+#     SSH_USER: "contass"
+#     SSH_HOST: "10.251.0.20"
+#     EXTRA_CMD: ""
+#   environment:
+#     name: production/pmsaofrancisco
+#     deployment_tier: production
+
+# pmburitizeiro:
+#   stage: deploy_wave_1
+#   extends: .deploy_template
+#   variables:
+#     SSH_USER: "contass"
+#     SSH_HOST: "10.251.0.9"
+#     EXTRA_CMD: ""
+#   environment:
+#     name: production/pmburitizeiro
+#     deployment_tier: production
+
+# pmclarodospocoes:
+#   stage: deploy_wave_1
+#   extends: .deploy_template
+#   variables:
+#     SSH_USER: "contass"
+#     SSH_HOST: "10.251.0.10"
+#     EXTRA_CMD: ""
+#   environment:
+#     name: production/pmclarodospocoes
+#     deployment_tier: production
+
+# pmibiracatu:
+#   stage: deploy_wave_1
+#   extends: .deploy_template
+#   variables:
+#     SSH_USER: "contass"
+#     SSH_HOST: "10.251.0.12"
+#     EXTRA_CMD: ""
+#   environment:
+#     name: production/pmibiracatu
+#     deployment_tier: production
+
+# # -------------------------
+# # WAVE 4 (restante)
+# # -------------------------
+# pmsantafeminas:
+#   stage: deploy_wave_1
+#   extends: .deploy_template
+#   variables:
+#     SSH_USER: "contass"
+#     SSH_HOST: "10.251.0.19"
+#     EXTRA_CMD: ""
+#   environment:
+#     name: production/pmsantafeminas
+#     deployment_tier: production
+
+# pmjuramento:
+#   stage: deploy_wave_1
+#   extends: .deploy_template
+#   variables:
+#     SSH_USER: "contass"
+#     SSH_HOST: "10.251.0.13"
+#     EXTRA_CMD: ""
+#   environment:
+#     name: production/pmjuramento
+#     deployment_tier: production
+
+# e-cidadev3:
+#   stage: deploy_wave_1
+#   extends: .deploy_template
+#   variables:
+#     SSH_USER: "contass"
+#     SSH_HOST: "10.250.30.100"
+#     EXTRA_CMD: ""
+#   environment:
+#     name: production/e-cidadev3
+#     deployment_tier: production
+
+# prefeiturasv3:
+#   stage: deploy_wave_1
+#   extends: .deploy_template
+#   variables:
+#     SSH_USER: "info"
+#     SSH_HOST: "10.251.0.44"
+#     EXTRA_CMD: "&& docker exec portaltransparencia_pm-app-1 php artisan tenants:migrate"
+#   environment:
+#     name: production/prefeiturasv3
+#     deployment_tier: production
