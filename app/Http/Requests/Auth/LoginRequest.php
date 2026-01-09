@@ -51,37 +51,26 @@ class LoginRequest extends FormRequest
         $userLogin = User::getUserByCpf($this->login);
 
         if (!$userLogin) {
-            Log::warning('Usuário não encontrado', ['login' => $this->login]);
             RateLimiter::hit($this->throttleKey());
             throw ValidationException::withMessages([
-                'login' => 'Usuário não encontrado. Verifique seu login e tente novamente.',
+                'login' => 'Usuário não encontrado ou não tem vínculo com RH . Verifique seu login e tente novamente.',
             ]);
         }
 
         $user = User::where('id_usuario', $userLogin->codigo)->first();
         $senhaHash = sha1(md5($this->password));
 
-        Log::info('Verificação de senha', [
-            'login' => $userLogin->login,
-            'senha_hash_banco' => $userLogin->senha,
-            'senha_hash' => $senhaHash
-        ]);
 
-        if ($senhaHash !== $userLogin->senha) {
-            Log::warning('Senha inválida', [
-                'login' => $this->login,
-                'senha_hash_banco' => $userLogin->senha,
-                'senha_hash' => $senhaHash
-            ]);
+        if ($senhaHash !== $userLogin->senha || !$userLogin) {
+
             RateLimiter::hit($this->throttleKey());
             throw ValidationException::withMessages([
-                'password' => 'Login ou Senha incorretos. Verifique e tente novamente.',
+                'password' => 'Login ou Senha incorretos ou Login não tem vinculo com RH . Verifique e tente novamente. ',
             ]);
         }
 
         Auth::login($user, $this->boolean('remember'));
         RateLimiter::clear($this->throttleKey());
-        Log::info('Login realizado com sucesso', ['login' => $this->login]);
     }
 
     /**

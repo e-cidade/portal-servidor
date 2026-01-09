@@ -210,10 +210,11 @@ class User extends Authenticatable
         $resultados = DB::table('configuracoes.db_usuarios as usuarios')
             ->join('configuracoes.db_usuacgm as usuacgm', 'usuacgm.id_usuario','=','usuarios.id_usuario')
             ->join('protocolo.cgm as cgm', 'cgm.z01_numcgm','=','usuacgm.cgmlogin')
+            ->join('pessoal.rhpessoal as rhpessoal', 'cgm.z01_numcgm','=','rhpessoal.rh01_numcgm')
             // ->joinleft('configuracoes.db_userinst as userinst', 'userinst.id_usuario','=','usuarios.id_usuario')
             ->select('usuarios.senha', 'usuarios.id_usuario as codigo', 'cgm.z01_cgccpf as login' )
             ->where('cgm.z01_cgccpf', '=', $cpf) 
-            //->where('userinst.rh01_instit', '=', $codigoInstituicao)
+            // ->where('userinst.rh01_instit', '=', $codigoInstituicao)
             ->get();
         return $resultados->first();
     }
