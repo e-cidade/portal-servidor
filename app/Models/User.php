@@ -213,7 +213,8 @@ class User extends Authenticatable
             ->join('pessoal.rhpessoal as rhpessoal', 'cgm.z01_numcgm','=','rhpessoal.rh01_numcgm')
             // ->joinleft('configuracoes.db_userinst as userinst', 'userinst.id_usuario','=','usuarios.id_usuario')
             ->select('usuarios.senha', 'usuarios.id_usuario as codigo', 'cgm.z01_cgccpf as login' )
-            ->where('cgm.z01_cgccpf', '=', $cpf) 
+            ->where('cgm.z01_cgccpf', '=', $cpf)
+            ->where('usuext', '=', 1) 
             // ->where('userinst.rh01_instit', '=', $codigoInstituicao)
             ->get();
         return $resultados->first();
