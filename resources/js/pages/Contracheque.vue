@@ -110,7 +110,7 @@ const anosUnicos = computed(() => {
 
 const mesUnicos = computed(() => {
     if (!form.ano) return [];
-    return props.matriculas?.filter(r => r.anousu === form.ano)
+    return props.matriculas?.filter(r => r.anousu === form.ano &&  r.regist === form.registro)
         .map(r => r.mesusu);
 });
 
