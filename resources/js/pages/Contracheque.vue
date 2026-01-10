@@ -92,7 +92,6 @@ const registros = computed(() => {
 
 const anos = computed(() => {
     if (!form.registro) return [];
-
     return [
         ...new Set(
             (props.matriculas ?? [])
@@ -103,15 +102,31 @@ const anos = computed(() => {
 });
 
 const anosUnicos = computed(() => {
-    const valores = anos.value.map(m => Number(m)); // cada m já é o ano
+    const valores = anos.value.map(m => Number(m));
     const unicos = [...new Set(valores)];
-    return unicos.sort((a, b) => b - a); // ordena do maior para o menor
+    return unicos.sort((a, b) => b - a);
 });
 
 const mesUnicos = computed(() => {
     if (!form.ano) return [];
-    return props.matriculas?.filter(r => r.anousu === form.ano &&  r.regist === form.registro)
+    return props.matriculas?.filter(r => r.anousu === form.ano && r.regist === form.registro)
         .map(r => r.mesusu);
+});
+
+// Adicione watchers para resetar os campos dependentes
+watch(() => form.registro, (novoValor, valorAnterior) => {
+    // Quando registro muda, limpa ano e mês
+    if (novoValor !== valorAnterior) {
+        form.ano = 0; // ou '' dependendo do seu caso
+        form.mes = 0;
+    }
+});
+
+watch(() => form.ano, (novoValor, valorAnterior) => {
+    // Quando ano muda, limpa apenas o mês
+    if (novoValor !== valorAnterior) {
+        form.mes = 0;
+    }
 });
 
 // botão só habilita se o form estiver válido

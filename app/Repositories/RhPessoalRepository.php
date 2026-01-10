@@ -110,8 +110,7 @@ class RhPessoalRepository
                                 left join rhpesrescisao on rh05_seqpes = rh02_seqpes
                                 LEFT JOIN cfpess ON (rh02_anousu,rh02_mesusu) = (r11_anousu,r11_mesusu) AND ((r11_dtfechamento+r11_diasliberarcontracheque) <= current_date OR r11_dtfechamento IS NULL)
                           where rh01_numcgm  = {$numcgm}                                                    
-                            and rh02_instit  = {$intituicao}
-                            and rh02_anousu  = 2024
+                            and rh02_instit  = {$intituicao}                    
                             and case when rh02_anousu = fc_anofolha({$intituicao}) 
                                       and rh02_mesusu = fc_mesfolha({$intituicao}) then false else true end
                           order by rh02_mesusu desc";
