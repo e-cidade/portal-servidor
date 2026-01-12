@@ -159,6 +159,19 @@ class ContraChequeController extends Controller
     public function validar($token)
     {
         $contracheque = RhemiteContracheque::where('rh85_codautent', $token)->first();
+
+        if($contracheque){
+            $dados = $this->rhPessoalRepository->getRubricas($contracheque->rh85_sigla, $contracheque->rh85_anousu, $contracheque->rh85_mesusu, $contracheque->rh85_regist) ?? collect();
+        }
+
+        $totais     = $dados['resumo'] ?? (object) [
+            'base_prev' => 0,
+            'base_irrf' => 0,
+            'tot_desc' => 0,
+            'tot_prov' => 0,
+            'saldo_devedor' => 0,
+            'base_irrf_ferias' => 0,
+        ];
         $instituicao = DbConfig::where('codigo', CODIGOINSTITUICAO)->select('codigo', 'nomeinst', 'ender', 'munic', 'uf', 'cep', 'bairro', 'numero', 'logo')->first();
 
         if (!$contracheque) {
@@ -168,6 +181,7 @@ class ContraChequeController extends Controller
         return view('validacao.valido', [
             'contracheque' => $contracheque,
             'instituicao' => $instituicao,
+            'totais' => $totais,
         ]);
     }
 

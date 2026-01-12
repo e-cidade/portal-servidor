@@ -176,7 +176,7 @@ const abrirRelatorio = () => {
                 <div class="flex flex-col sm:flex-row gap-4 sm:gap-2 space-y-4 sm:space-y-0 p-5">
                     <div class="flex flex-col">
                         <Label class="p-2 font-semibold text-ring/100">Matrícula:</Label>
-                        <select id="registro" v-model.number="form.registro" required 
+                        <select id="registro" v-model.number="form.registro" required
                             class="border border-ring/50 rounded-sm px-6 py-2 bg-white text-sm text-ring/100 focus:outline-none focus:ring-2 focus:ring-customprimarybutton">
                             <option :value="0">Selecione a matrícula</option>
                             <option v-for="(registro, index) in registros" :key="index" :value="registro">
@@ -206,7 +206,7 @@ const abrirRelatorio = () => {
                     </div>
                     <div class="flex flex-col">
                         <Label class="p-2 font-semibold text-ring/100">Tipo de Folha:</Label>
-                        <select v-model.number="form.tipo_folha" 
+                        <select v-model.number="form.tipo_folha"
                             class="border border-ring/50 rounded-sm px-6 py-2 bg-white text-sm text-ring/100 focus:outline-none focus:ring-2 focus:ring-customprimarybutton">
                             <option v-for="tipo in props.tipos_folha" :key="tipo.codigo" :value="tipo.codigo">{{
                                 tipo.descr }}</option>
@@ -278,24 +278,22 @@ const abrirRelatorio = () => {
                 </div>
 
                 <!-- Resumo -->
-                <div class="bg-white mt-6 border border-ring/10 rounded">
+                <div class="bg-white mt-6 border border-ring/10 rounded overflow-x-auto">
                     <div class="bg-ring/30 font-bold px-4 py-2 ">RESUMO</div>
                     <table class="w-full text-x-sm border-collapse">
                         <thead>
                             <tr class="bg-ring/10  text-left">
                                 <th class="px-3 py-2">Base p/ IRRF</th>
                                 <th class="px-3 py-2">Total Vantagens</th>
-                                <th class="px-3 py-2">Saldo Devedor</th>
                                 <th class="px-3 py-2">Total Provendos</th>
-                                <th class="px-3 py-2">Total Descontos</th>                                
-                                <th class="px-3 py-2">Total Líquido</th>  
+                                <th class="px-3 py-2">Total Descontos</th>
+                                <th class="px-3 py-2">Total Líquido</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td class="px-3 py-2">{{ formatCurrency(props.contra_cheque?.resumo?.base_irrf) }}</td>
                                 <td class="px-3 py-2">{{ formatCurrency(props.contra_cheque?.resumo?.tot_prov) }}</td>
-                                <td class="px-3 py-2">{{ formatCurrency(props.contra_cheque?.resumo?.saldo_devedor) }}</td>
                                 <td class="px-3 py-2">{{ formatCurrency(props.contra_cheque?.resumo?.tot_prov) }}</td>
                                 <td class="px-3 py-2">{{ formatCurrency(props.contra_cheque?.resumo?.tot_desc) }}</td>
                                 <td class="px-3 py-2">{{ formatCurrency(props.contra_cheque?.resumo?.tot_prov - props.contra_cheque?.resumo?.tot_desc) }}</td>
