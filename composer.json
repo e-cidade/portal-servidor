@@ -38,7 +38,10 @@
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"
-        }
+        },
+        "files": [
+            "bootstrap/tenant_resolver.php"
+        ]
     },
     "scripts": {
         "post-autoload-dump": [
