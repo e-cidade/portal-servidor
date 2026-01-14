@@ -20,6 +20,7 @@ before_script:
     - >
       ssh ${SSH_USER}@${SSH_HOST}
       "cd /opt/contass/portal-servidor
+      && git checkout .
       && git pull origin main
       && docker compose down
       && docker compose up -d
