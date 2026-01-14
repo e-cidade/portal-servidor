@@ -7,6 +7,7 @@ const CACHE_TENANTS_PHP = __DIR__  . '/cache/tenants.php';
 function resolveTenantDatabase()
 {
 
+
     if (php_sapi_name() === 'cli') {
         return env('DB_DATABASE', 'forge');
     }
@@ -20,6 +21,7 @@ function resolveTenantDatabase()
                 return  $tenant[1];
             }
         }
+
     }
     return env('DB_DATABASE', 'forge');
 }
@@ -54,12 +56,10 @@ function getTenantDatabaseIP(string $tenant)
 
     foreach ($lines as $line) {
         $parts = explode(',', $line);
-        if (count($parts) >= 3 && $parts[0] === $tenant) {
+        if (count($parts) >= 3 && $parts[1] === $tenant) {
             return $parts[2];
         }
     }
-
-
     return env('DB_HOST', '127.0.0.1');
 }
 
