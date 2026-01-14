@@ -116,16 +116,16 @@ pmubai:
      name: production/pmubai
      deployment_tier: production
 
-pmsaojoaomissoes:
-   stage: deploy_wave_1
-   extends: .deploy_template
-   variables:
-     SSH_USER: "contass"
-     SSH_HOST: "172.31.212.161"
-     EXTRA_CMD: ""
-   environment:
-     name: production/pmsaojoaomissoes
-     deployment_tier: production
+#pmsaojoaomissoes:
+#   stage: deploy_wave_1
+#   extends: .deploy_template
+#   variables:
+#     SSH_USER: "contass"
+#     SSH_HOST: "10.251.0.121"
+#     EXTRA_CMD: ""
+#   environment:
+#     name: production/pmsaojoaomissoes
+#     deployment_tier: production
 
 # # -------------------------
 # # WAVE 3 (5)
@@ -199,16 +199,16 @@ pmjuramento:
      name: production/pmjuramento
      deployment_tier: production
 
-e-cidadev3:
-   stage: deploy_wave_1
-   extends: .deploy_template
-   variables:
-     SSH_USER: "contass"
-     SSH_HOST: "10.250.30.100"
-     EXTRA_CMD: ""
-   environment:
-     name: production/e-cidadev3
-     deployment_tier: production
+#e-cidadev3:
+#   stage: deploy_wave_1
+#   extends: .deploy_template
+#   variables:
+#     SSH_USER: "contass"
+#     SSH_HOST: "10.250.30.100"
+#     EXTRA_CMD: ""
+#   environment:
+#     name: production/e-cidadev3
+#     deployment_tier: production
 
 prefeiturasv3:
    stage: deploy_wave_1
