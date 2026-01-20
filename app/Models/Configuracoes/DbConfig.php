@@ -4,7 +4,8 @@ namespace App\Models\Configuracoes;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DbConfig extends Model {
+class DbConfig extends Model
+{
     public $timestamps = false;
 
     protected $table = 'configuracoes.db_config';
