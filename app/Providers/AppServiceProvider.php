@@ -42,11 +42,11 @@ class AppServiceProvider extends ServiceProvider
             Log::info('TenancyInitialized event fired');
             $tenant = $event->tenancy->tenant;
 
-            $dbName = $tenant->getAttribute('db_database') ?? env('DB_DATABASE');
+            $dbName = $tenant->getAttribute('db_name') ?? $tenant->getAttribute('db_database') ?? env('DB_DATABASE');
             $dbHost = $tenant->getAttribute('db_host') ?? env('DB_HOST', '127.0.0.1');
             $dbPort = $tenant->getAttribute('db_port') ?? env('DB_PORT', '5432');
-            $dbUser = env('DB_USERNAME', 'root');
-            $dbPass = env('DB_PASSWORD', '');
+            $dbUser = $tenant->getAttribute('db_username') ?? $tenant->getAttribute('db_user') ?? env('DB_USERNAME', 'root');
+            $dbPass = $tenant->getAttribute('db_password') ?? $tenant->getAttribute('db_pass') ?? env('DB_PASSWORD', '');
 
             Log::info('[tenancy] Details resolved', [
                 'tenant_id' => $tenant?->getTenantKey(),
@@ -81,21 +81,30 @@ class AppServiceProvider extends ServiceProvider
                 'sslmode' => 'prefer',
             ]);
 
-            // Make tenant the default connection for the lifetime of this request
-            Config::set('database.default', 'tenant');
 
-            DB::purge('tenant');
-            DB::reconnect('tenant');
-            DB::setDefaultConnection('tenant');
-
-            // Ensure search_path for Postgres schemas on tenant connection
-            try {
-                // Include all common schemas used by the app, including configuracoes where DbConfig lives
-                DB::connection('tenant')->statement('SET search_path TO public, pessoal, protocolo, cadastro, configuracoes ');
-            } catch (\Throwable $e) {
-
-            }
         });
+
+        // Make tenant the default connection for the lifetime of this request
+        Config::set('database.default', 'tenant');
+
+        DB::purge('tenant');
+        DB::reconnect('tenant');
+        DB::setDefaultConnection('tenant');
+
+        // Ensure search_path for Postgres schemas on tenant connection
+        try {
+            // Include all common schemas used by the app, including configuracoes where DbConfig lives
+            DB::connection('tenant')->statement('SET search_path TO public, pessoal, protocolo, cadastro, configuracoes ');
+
+            // Force clear any cached default connection in PDO
+            DB::purge('pgsql');
+            // Garante que o usuário autenticado seja recarregado do banco do tenant
+            if (auth()->check()) {
+                auth()->forgetUser();
+            }
+        } catch (\Throwable $e) {
+
+        }
 
         // Optionally reset to central connection when tenancy ends (for console, jobs, etc.)
         Event::listen(TenancyEnded::class, function () {

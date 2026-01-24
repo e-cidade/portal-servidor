@@ -42,6 +42,11 @@ class SetCodigoInstituicao
             define('CODIGOINSTITUICAO', $codigoInstituicao);
         }
 
+        // Se estivermos logado, limpamos o cache do usuário para garantir que ele venha do banco do tenant
+        if (auth()->check()) {
+            auth()->forgetUser();
+        }
+
         $instituicao = null;
         // Só consulta o banco se a tenancy já estiver inicializada
         try {

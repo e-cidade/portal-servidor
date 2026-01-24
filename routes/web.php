@@ -1,10 +1,6 @@
 <?php
 
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\ContraChequeController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\DependentesController;
-use App\Http\Controllers\FeriasController;
+use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\SetCodigoInstituicao;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
@@ -18,6 +14,7 @@ Route::middleware([
 ])->group(function () {
     Route::middleware([
         SetCodigoInstituicao::class,
+        HandleInertiaRequests::class,
     ])->group(function () {
 
         // Rotas específicas dos tenants
