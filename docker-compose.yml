@@ -7,6 +7,7 @@ services:
                 WWWUSER: ${WWWUSER}
                 WWWGROUP: ${WWWGROUP}
         container_name: portalservidor_app
+        restart: always
         extra_hosts:
             - 'host.docker.internal:host-gateway'
         ports:
