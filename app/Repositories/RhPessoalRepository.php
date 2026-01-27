@@ -72,21 +72,21 @@ class RhPessoalRepository
     public function getMatriculaAtiva(int $numcgm, int $intituicao)
     {
         // Encontrar o maior ano
-        $maiorAno = DB::table('rhpessoalmov')->join('rhpessoal', 'rh02_regist', '=', 'rh01_regist')
+        $maiorAno = DB::table('pessoal.rhpessoalmov')->join('pessoal.rhpessoal', 'rh02_regist', '=', 'rh01_regist')
             ->where('rh01_instit', '=', $intituicao)
             ->where('rh01_numcgm', '=', $numcgm)
             ->max('rh02_anousu');
 
         // Encontrar o maior mês
-        $maiorMes = DB::table('rhpessoalmov')->join('rhpessoal', 'rh02_regist', '=', 'rh01_regist')
+        $maiorMes = DB::table('pessoal.rhpessoalmov')->join('pessoal.rhpessoal', 'rh02_regist', '=', 'rh01_regist')
             ->where('rh02_anousu', '=', $maiorAno) // Filtrar pelo maior ano para garantir que o mês seja do ano mais recente
             ->where('rh01_instit', '=', $intituicao)
             ->where('rh01_numcgm', '=', $numcgm)
             ->max('rh02_mesusu');
 
-        return DB::table('rhpessoal')
-            ->join('rhpessoalmov', 'rh02_regist', '=', 'rh01_regist')
-            ->leftJoin('rhpesrescisao', 'rh05_seqpes', '=', 'rh02_seqpes')
+        return DB::table('pessoal.rhpessoal')
+            ->join('pessoal.rhpessoalmov', 'rh02_regist', '=', 'rh01_regist')
+            ->leftJoin('pessoal.rhpesrescisao', 'rh05_seqpes', '=', 'rh02_seqpes')
             ->select('rh01_regist', 'rh02_anousu', 'rh02_mesusu')
             ->where('rh01_instit', '=', $intituicao)
             ->where('rh02_anousu', '=', $maiorAno)
@@ -105,13 +105,13 @@ class RhPessoalRepository
     public function getMatriculasAtivas(int $numcgm, int $intituicao)
     {
          $sql = "select distinct rh02_regist as regist, rh02_anousu as anousu, rh02_mesusu as mesusu
-                           from rhpessoalmov 
+                           from rhpessoalmov
                                 inner join rhpessoal on rh02_regist=rh01_regist
                                 left join rhpesrescisao on rh05_seqpes = rh02_seqpes
                                 LEFT JOIN cfpess ON (rh02_anousu,rh02_mesusu) = (r11_anousu,r11_mesusu) AND ((r11_dtfechamento+r11_diasliberarcontracheque) <= current_date OR r11_dtfechamento IS NULL)
-                          where rh01_numcgm  = {$numcgm}                                                    
-                            and rh02_instit  = {$intituicao}                    
-                            and case when rh02_anousu = fc_anofolha({$intituicao}) 
+                          where rh01_numcgm  = {$numcgm}
+                            and rh02_instit  = {$intituicao}
+                            and case when rh02_anousu = fc_anofolha({$intituicao})
                                       and rh02_mesusu = fc_mesfolha({$intituicao}) then false else true end
                           order by rh02_mesusu desc";
 
@@ -287,7 +287,7 @@ class RhPessoalRepository
                     ->where('r11_mesusu', '=', $mes)
                     ->whereNotNull('r11_dtfechamento');
             })
-            
+
             ->where('rh01_regist', $matricula)
             ->orderBy("{$sigla}_pd")
             ->orderBy("{$sigla}_rubric")

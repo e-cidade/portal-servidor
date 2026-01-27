@@ -28,7 +28,7 @@ Route::get('/contracheque-validar/{token}', [ContraChequeController::class, 'val
 
 // Rotas protegidas
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('dashboard', [DashboardController::class, 'index'])->middleware(\Stancl\Tenancy\Middleware\InitializeTenancyByDomain::class)->name('dashboard');
     Route::get('dependentes', [DependentesController::class, 'index'])->name('dependentes');
 
     Route::get('contracheque', [ContraChequeController::class, 'index'])->name('contracheque');

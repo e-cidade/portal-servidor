@@ -81,30 +81,30 @@ class AppServiceProvider extends ServiceProvider
                 'sslmode' => 'prefer',
             ]);
 
+            Config::set('database.default', 'tenant');
 
+            DB::purge('tenant');
+            DB::reconnect('tenant');
+            DB::setDefaultConnection('tenant');
+            DB::connection('tenant')->statement('SET search_path TO public, pessoal, protocolo, cadastro, configuracoes ');
         });
 
-        // Make tenant the default connection for the lifetime of this request
-        Config::set('database.default', 'tenant');
 
-        DB::purge('tenant');
-        DB::reconnect('tenant');
-        DB::setDefaultConnection('tenant');
-
-        // Ensure search_path for Postgres schemas on tenant connection
-        try {
-            // Include all common schemas used by the app, including configuracoes where DbConfig lives
-            DB::connection('tenant')->statement('SET search_path TO public, pessoal, protocolo, cadastro, configuracoes ');
-
-            // Force clear any cached default connection in PDO
-            DB::purge('pgsql');
-            // Garante que o usuário autenticado seja recarregado do banco do tenant
-            if (auth()->check()) {
-                auth()->forgetUser();
-            }
-        } catch (\Throwable $e) {
-
-        }
+//        // Ensure search_path for Postgres schemas on tenant connection
+//
+//        try {
+//            // Include all common schemas used by the app, including configuracoes where DbConfig lives
+//
+//
+//            // Force clear any cached default connection in PDO
+//            DB::purge('pgsql');
+//            // Garante que o usuário autenticado seja recarregado do banco do tenant
+//            if (auth()->check()) {
+//                auth()->forgetUser();
+//            }
+//        } catch (\Throwable $e) {
+//
+//        }
 
         // Optionally reset to central connection when tenancy ends (for console, jobs, etc.)
         Event::listen(TenancyEnded::class, function () {
