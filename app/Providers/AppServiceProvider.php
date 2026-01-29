@@ -45,9 +45,11 @@ class AppServiceProvider extends ServiceProvider
             $dbName = $tenant->getAttribute('db_name') ?? $tenant->getAttribute('db_database') ?? env('DB_DATABASE');
             $dbHost = $tenant->getAttribute('db_host') ?? env('DB_HOST', '127.0.0.1');
             $dbPort = $tenant->getAttribute('db_port') ?? env('DB_PORT', '5432');
-            $dbUser = $tenant->getAttribute('db_username') ?? $tenant->getAttribute('db_user') ?? env('DB_USERNAME', 'root');
-            $dbPass = $tenant->getAttribute('db_password') ?? $tenant->getAttribute('db_pass') ?? env('DB_PASSWORD', '');
+//            $dbUser = $tenant->getAttribute('db_username') ?? $tenant->getAttribute('db_user') ?? env('DB_USERNAME', 'root');
+//            $dbPass = $tenant->getAttribute('db_password') ?? $tenant->getAttribute('db_pass') ?? env('DB_PASSWORD', '');
 
+            $dbUser = env('DB_USERNAME', 'dbportal');
+            $dbPass = env('DB_PASSWORD', '');
             Log::info('[tenancy] Details resolved', [
                 'tenant_id' => $tenant?->getTenantKey(),
                 'db_name' => $dbName,
@@ -90,23 +92,6 @@ class AppServiceProvider extends ServiceProvider
         });
 
 
-//        // Ensure search_path for Postgres schemas on tenant connection
-//
-//        try {
-//            // Include all common schemas used by the app, including configuracoes where DbConfig lives
-//
-//
-//            // Force clear any cached default connection in PDO
-//            DB::purge('pgsql');
-//            // Garante que o usuário autenticado seja recarregado do banco do tenant
-//            if (auth()->check()) {
-//                auth()->forgetUser();
-//            }
-//        } catch (\Throwable $e) {
-//
-//        }
-
-        // Optionally reset to central connection when tenancy ends (for console, jobs, etc.)
         Event::listen(TenancyEnded::class, function () {
             $central = config('database.central_default') ?: 'pgsql';
             Config::set('database.default', $central);

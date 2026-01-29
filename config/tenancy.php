@@ -9,7 +9,7 @@ return [
 
     // Tenancy bootstrappers configure things like the database connection, cache, filesystems, etc.
     'bootstrappers' => [
-        // DatabaseTenancyBootstrapper::class,
+         DatabaseTenancyBootstrapper::class,
         // You can add other bootstrappers here (CacheTenancyBootstrapper, FilesystemTenancyBootstrapper, etc.)
     ],
 
