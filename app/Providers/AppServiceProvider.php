@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
+use Inertia\Inertia;
 use Stancl\Tenancy\Events\TenancyEnded;
 use Stancl\Tenancy\Events\TenancyInitialized;
 
@@ -45,8 +46,12 @@ class AppServiceProvider extends ServiceProvider
             $dbName = $tenant->getAttribute('db_name') ?? $tenant->getAttribute('db_database') ?? env('DB_DATABASE');
             $dbHost = $tenant->getAttribute('db_host') ?? env('DB_HOST', '127.0.0.1');
             $dbPort = $tenant->getAttribute('db_port') ?? env('DB_PORT', '5432');
-//            $dbUser = $tenant->getAttribute('db_username') ?? $tenant->getAttribute('db_user') ?? env('DB_USERNAME', 'root');
-//            $dbPass = $tenant->getAttribute('db_password') ?? $tenant->getAttribute('db_pass') ?? env('DB_PASSWORD', '');
+
+            define('CODIGOINSTITUICAO', $tenant->getAttribute('db_instit'));
+
+            Inertia::share([
+                'instituicao' => CODIGOINSTITUICAO,
+            ]);
 
             $dbUser = env('DB_USERNAME', 'dbportal');
             $dbPass = env('DB_PASSWORD', '');

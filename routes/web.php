@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Middleware\HandleInertiaRequests;
-use App\Http\Middleware\SetCodigoInstituicao;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
@@ -13,7 +12,6 @@ Route::middleware([
     PreventAccessFromCentralDomains::class,
 ])->group(function () {
     Route::middleware([
-        SetCodigoInstituicao::class,
         HandleInertiaRequests::class,
     ])->group(function () {
 
