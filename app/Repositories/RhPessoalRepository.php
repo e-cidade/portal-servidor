@@ -105,13 +105,13 @@ class RhPessoalRepository
     public function getMatriculasAtivas(int $numcgm, int $intituicao)
     {
          $sql = "select distinct rh02_regist as regist, rh02_anousu as anousu, rh02_mesusu as mesusu
-                           from rhpessoalmov 
+                           from rhpessoalmov
                                 inner join rhpessoal on rh02_regist=rh01_regist
                                 left join rhpesrescisao on rh05_seqpes = rh02_seqpes
                                 LEFT JOIN cfpess ON (rh02_anousu,rh02_mesusu) = (r11_anousu,r11_mesusu) AND ((r11_dtfechamento+r11_diasliberarcontracheque) <= current_date OR r11_dtfechamento IS NULL)
-                          where rh01_numcgm  = {$numcgm}                                                    
-                            and rh02_instit  = {$intituicao}                    
-                            and case when rh02_anousu = fc_anofolha({$intituicao}) 
+                          where rh01_numcgm  = {$numcgm}
+                            and rh02_instit  = {$intituicao}
+                            and case when rh02_anousu = fc_anofolha({$intituicao})
                                       and rh02_mesusu = fc_mesfolha({$intituicao}) then false else true end
                           order by rh02_mesusu desc";
 
@@ -287,7 +287,7 @@ class RhPessoalRepository
                     ->where('r11_mesusu', '=', $mes)
                     ->whereNotNull('r11_dtfechamento');
             })
-            
+
             ->where('rh01_regist', $matricula)
             ->orderBy("{$sigla}_pd")
             ->orderBy("{$sigla}_rubric")
@@ -334,7 +334,10 @@ class RhPessoalRepository
             ->join('rhlota', 'rh02_lota', '=', 'rhlota.r70_codigo')
             ->join('rhregime', 'rh30_codreg', '=', 'rh02_codreg')
             ->join('rhpessoal', 'rh02_regist', '=', 'rh01_regist')
-            ->join('rhfuncao', 'rh37_funcao', '=', 'rh02_funcao')
+            ->join('rhfuncao', function($join) use ($ano, $mes, $instituicao) {
+                $join->on('rh37_funcao', '=', 'rh02_funcao')
+                    ->where('rh37_instit', '=', $instituicao);
+            })
             ->join('cgm', 'rh01_numcgm', '=', 'z01_numcgm')
             ->leftJoin('rhpesbanco'     , 'rh44_seqpes', '=' ,'rh02_seqpes')
             ->leftJoin('rhpesdoc',  'rh16_regist', '=','rh01_regist')
