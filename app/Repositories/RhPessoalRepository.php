@@ -334,7 +334,10 @@ class RhPessoalRepository
             ->join('rhlota', 'rh02_lota', '=', 'rhlota.r70_codigo')
             ->join('rhregime', 'rh30_codreg', '=', 'rh02_codreg')
             ->join('rhpessoal', 'rh02_regist', '=', 'rh01_regist')
-            ->join('rhfuncao', 'rh37_funcao', '=', 'rh02_funcao')
+            ->join('rhfuncao', function($join) use ($ano, $mes, $instituicao) {
+                $join->on('rh37_funcao', '=', 'rh02_funcao')
+                    ->where('rh37_instit', '=', $instituicao);
+            })
             ->join('cgm', 'rh01_numcgm', '=', 'z01_numcgm')
             ->leftJoin('rhpesbanco'     , 'rh44_seqpes', '=' ,'rh02_seqpes')
             ->leftJoin('rhpesdoc',  'rh16_regist', '=','rh01_regist')
