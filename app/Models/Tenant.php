@@ -11,8 +11,20 @@ class Tenant extends BaseTenant implements TenantWithDatabase
 {
     use HasDatabase, HasDomains;
 
+    protected $primaryKey = 'id';
+
+    public $incrementing = false;
+
+    protected $keyType = 'string';
+
     // Ensure JSON data attribute is cast to array when retrieved
     protected $casts = [
         'data' => 'array',
     ];
+
+
+    public function domains()
+    {
+        return $this->hasMany(Domain::class, 'tenant_id', 'id');
+    }
 }

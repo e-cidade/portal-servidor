@@ -43,11 +43,18 @@ class AppServiceProvider extends ServiceProvider
             Log::info('TenancyInitialized event fired');
             $tenant = $event->tenancy->tenant;
 
+            // Pega o domínio relativo à URL da requisição
+            $domain = $tenant->domains()->where('domain', request()->getHost())->first();
+
+            Log::info('AppServiceProvider Domain', ['domain' => $domain?->domain]);
+
+            $codigoInstituicao = $domain?->getAttribute('instituicao') ?? $tenant->getAttribute('db_instit');
+
             $dbName = $tenant->getAttribute('db_name') ?? $tenant->getAttribute('db_database') ?? env('DB_DATABASE');
             $dbHost = $tenant->getAttribute('db_host') ?? env('DB_HOST', '127.0.0.1');
             $dbPort = $tenant->getAttribute('db_port') ?? env('DB_PORT', '5432');
 
-            define('CODIGOINSTITUICAO', $tenant->getAttribute('db_instit'));
+            define('CODIGOINSTITUICAO', $codigoInstituicao);
 
             Inertia::share([
                 'instituicao' => CODIGOINSTITUICAO,
