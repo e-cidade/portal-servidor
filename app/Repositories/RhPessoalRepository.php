@@ -72,21 +72,21 @@ class RhPessoalRepository
     public function getMatriculaAtiva(int $numcgm, int $intituicao)
     {
         // Encontrar o maior ano
-        $maiorAno = DB::table('rhpessoalmov')->join('rhpessoal', 'rh02_regist', '=', 'rh01_regist')
+        $maiorAno = DB::table('pessoal.rhpessoalmov')->join('pessoal.rhpessoal', 'rh02_regist', '=', 'rh01_regist')
             ->where('rh01_instit', '=', $intituicao)
             ->where('rh01_numcgm', '=', $numcgm)
             ->max('rh02_anousu');
 
         // Encontrar o maior mês
-        $maiorMes = DB::table('rhpessoalmov')->join('rhpessoal', 'rh02_regist', '=', 'rh01_regist')
+        $maiorMes = DB::table('pessoal.rhpessoalmov')->join('pessoal.rhpessoal', 'rh02_regist', '=', 'rh01_regist')
             ->where('rh02_anousu', '=', $maiorAno) // Filtrar pelo maior ano para garantir que o mês seja do ano mais recente
             ->where('rh01_instit', '=', $intituicao)
             ->where('rh01_numcgm', '=', $numcgm)
             ->max('rh02_mesusu');
 
-        return DB::table('rhpessoal')
-            ->join('rhpessoalmov', 'rh02_regist', '=', 'rh01_regist')
-            ->leftJoin('rhpesrescisao', 'rh05_seqpes', '=', 'rh02_seqpes')
+        return DB::table('pessoal.rhpessoal')
+            ->join('pessoal.rhpessoalmov', 'rh02_regist', '=', 'rh01_regist')
+            ->leftJoin('pessoal.rhpesrescisao', 'rh05_seqpes', '=', 'rh02_seqpes')
             ->select('rh01_regist', 'rh02_anousu', 'rh02_mesusu')
             ->where('rh01_instit', '=', $intituicao)
             ->where('rh02_anousu', '=', $maiorAno)
