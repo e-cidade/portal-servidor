@@ -8,12 +8,14 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('domains', function (Blueprint $table) {
-            $table->id();
-            $table->string('domain')->unique();
-            $table->string('tenant_id');
-            $table->timestamps();
+            Schema::create('domains', function (Blueprint $table) {
+                $table->id();
+                $table->string('domain')->unique();
+                $table->string('tenant_id');
+                $table->timestamps();
 
-            $table->foreign('tenant_id')->references('id')->on('tenants')->onDelete('cascade');
+                $table->foreign('tenant_id')->references('id')->on('tenants')->onDelete('cascade');
+            });
         });
     }
 

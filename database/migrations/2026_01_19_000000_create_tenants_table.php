@@ -8,9 +8,11 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('tenants', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->json('data')->nullable();
-            $table->timestamps();
+            if (!Schema::hasTable('tenants')) {
+                $table->string('id')->primary();
+                $table->json('data')->nullable();
+                $table->timestamps();
+            }
         });
     }
 
