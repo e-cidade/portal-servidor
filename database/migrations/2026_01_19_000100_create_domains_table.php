@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('domains', function (Blueprint $table) {
+        if (! Schema::hasTable('domains')) {
             Schema::create('domains', function (Blueprint $table) {
                 $table->id();
                 $table->string('domain')->unique();
@@ -16,7 +16,7 @@ return new class extends Migration {
 
                 $table->foreign('tenant_id')->references('id')->on('tenants')->onDelete('cascade');
             });
-        });
+        };
     }
 
     public function down(): void
