@@ -344,4 +344,85 @@ class RhPessoalRepository
             ->where('rh02_regist', $matricula)->first();
 
     }
+
+    public function getRendimentos(int $numCgm, int $anoBase, int $instituicao)
+    {
+        $rendimentos = DB::table('rhdirfgeracaodadospessoal as rhdirfgeracaodadospessoal_outer')
+            ->join('pessoal.rhdirfgeracao as g', 'g.rh95_sequencial', '=', 'rhdirfgeracaodadospessoal_outer.rh96_rhdirfgeracao')
+            ->join('cgm as c', 'c.z01_numcgm', '=', 'rhdirfgeracaodadospessoal_outer.rh96_numcgm')
+            ->select(
+                'rhdirfgeracaodadospessoal_outer.rh96_sequencial',
+                'rhdirfgeracaodadospessoal_outer.rh96_numcgm',
+                'c.z01_nome',
+                'rhdirfgeracaodadospessoal_outer.rh96_cpfcnpj',
+                DB::raw("
+            (
+                select array_agg(distinct r.rh99_regist order by r.rh99_regist asc)
+                from rhdirfgeracaodadospessoalvalor v
+                inner join rhdirfgeracaopessoalregist r
+                    on r.rh99_rhdirfgeracaodadospessoalvalor = v.rh98_sequencial
+                where v.rh98_rhdirfgeracaodadospessoal = rhdirfgeracaodadospessoal_outer.rh96_sequencial
+            ) as regist
+        "),
+                DB::raw("coalesce((select sum(v.rh98_valor) from rhdirfgeracaodadospessoalvalor v where v.rh98_rhdirftipovalor = 1 and v.rh98_rhdirfgeracaodadospessoal = rhdirfgeracaodadospessoal_outer.rh96_sequencial and v.rh98_mes between 1 and 12), 0) as rendimento"),
+                DB::raw("coalesce((select sum(v.rh98_valor) from rhdirfgeracaodadospessoalvalor v where v.rh98_rhdirftipovalor = 1 and v.rh98_rhdirfgeracaodadospessoal = rhdirfgeracaodadospessoal_outer.rh96_sequencial and v.rh98_mes = 13), 0) as rendimento_13"),
+                DB::raw("coalesce((select sum(v.rh98_valor) from rhdirfgeracaodadospessoalvalor v where v.rh98_rhdirftipovalor = 2 and v.rh98_rhdirfgeracaodadospessoal = rhdirfgeracaodadospessoal_outer.rh96_sequencial and v.rh98_mes between 1 and 12), 0) as prev_oficial"),
+                DB::raw("coalesce((select sum(v.rh98_valor) from rhdirfgeracaodadospessoalvalor v where v.rh98_rhdirftipovalor = 2 and v.rh98_rhdirfgeracaodadospessoal = rhdirfgeracaodadospessoal_outer.rh96_sequencial and v.rh98_mes = 13), 0) as prev_oficial_13"),
+                DB::raw("coalesce((select sum(v.rh98_valor) from rhdirfgeracaodadospessoalvalor v where v.rh98_rhdirftipovalor = 3 and v.rh98_rhdirfgeracaodadospessoal = rhdirfgeracaodadospessoal_outer.rh96_sequencial and v.rh98_mes between 1 and 12), 0) as prev_privada"),
+                DB::raw("coalesce((select sum(v.rh98_valor) from rhdirfgeracaodadospessoalvalor v where v.rh98_rhdirftipovalor = 3 and v.rh98_rhdirfgeracaodadospessoal = rhdirfgeracaodadospessoal_outer.rh96_sequencial and v.rh98_mes = 13), 0) as prev_privada_13"),
+                DB::raw("coalesce((select sum(v.rh98_valor) from rhdirfgeracaodadospessoalvalor v where v.rh98_rhdirftipovalor = 4 and v.rh98_rhdirfgeracaodadospessoal = rhdirfgeracaodadospessoal_outer.rh96_sequencial and v.rh98_mes between 1 and 12), 0) as depend"),
+                DB::raw("coalesce((select sum(v.rh98_valor) from rhdirfgeracaodadospessoalvalor v where v.rh98_rhdirftipovalor = 4 and v.rh98_rhdirfgeracaodadospessoal = rhdirfgeracaodadospessoal_outer.rh96_sequencial and v.rh98_mes = 13), 0) as depend_13"),
+                DB::raw("coalesce((select sum(v.rh98_valor) from rhdirfgeracaodadospessoalvalor v where v.rh98_rhdirftipovalor = 5 and v.rh98_rhdirfgeracaodadospessoal = rhdirfgeracaodadospessoal_outer.rh96_sequencial and v.rh98_mes between 1 and 12), 0) as pensao"),
+                DB::raw("coalesce((select sum(v.rh98_valor) from rhdirfgeracaodadospessoalvalor v where v.rh98_rhdirftipovalor = 5 and v.rh98_rhdirfgeracaodadospessoal = rhdirfgeracaodadospessoal_outer.rh96_sequencial and v.rh98_mes = 13), 0) as pensao_13"),
+                DB::raw("coalesce((select sum(v.rh98_valor) from rhdirfgeracaodadospessoalvalor v where v.rh98_rhdirftipovalor = 6 and v.rh98_rhdirfgeracaodadospessoal = rhdirfgeracaodadospessoal_outer.rh96_sequencial and v.rh98_mes between 1 and 12), 0) as irrf"),
+                DB::raw("coalesce((select sum(v.rh98_valor) from rhdirfgeracaodadospessoalvalor v where v.rh98_rhdirftipovalor = 6 and v.rh98_rhdirfgeracaodadospessoal = rhdirfgeracaodadospessoal_outer.rh96_sequencial and v.rh98_mes = 13), 0) as irrf_13"),
+                DB::raw("coalesce((select sum(v.rh98_valor) from rhdirfgeracaodadospessoalvalor v where v.rh98_rhdirftipovalor = 7 and v.rh98_rhdirfgeracaodadospessoal = rhdirfgeracaodadospessoal_outer.rh96_sequencial and v.rh98_mes between 1 and 12), 0) as aposentadoria_65"),
+                DB::raw("coalesce((select sum(v.rh98_valor) from rhdirfgeracaodadospessoalvalor v where v.rh98_rhdirftipovalor = 7 and v.rh98_rhdirfgeracaodadospessoal = rhdirfgeracaodadospessoal_outer.rh96_sequencial and v.rh98_mes = 13), 0) as aposentadoria_65_13"),
+                DB::raw("coalesce((select sum(v.rh98_valor) from rhdirfgeracaodadospessoalvalor v where v.rh98_rhdirftipovalor = 8 and v.rh98_rhdirfgeracaodadospessoal = rhdirfgeracaodadospessoal_outer.rh96_sequencial and v.rh98_mes between 1 and 12), 0) as diaria"),
+                DB::raw("coalesce((select sum(v.rh98_valor) from rhdirfgeracaodadospessoalvalor v where v.rh98_rhdirftipovalor = 9 and v.rh98_rhdirfgeracaodadospessoal = rhdirfgeracaodadospessoal_outer.rh96_sequencial and v.rh98_mes between 1 and 12), 0) as ind_rescisao"),
+                DB::raw("coalesce((select sum(v.rh98_valor) from rhdirfgeracaodadospessoalvalor v where v.rh98_rhdirftipovalor = 10 and v.rh98_rhdirfgeracaodadospessoal = rhdirfgeracaodadospessoal_outer.rh96_sequencial and v.rh98_mes between 1 and 12), 0) as abono"),
+                DB::raw("coalesce((select sum(v.rh98_valor) from rhdirfgeracaodadospessoalvalor v where v.rh98_rhdirftipovalor = 15 and v.rh98_rhdirfgeracaodadospessoal = rhdirfgeracaodadospessoal_outer.rh96_sequencial and v.rh98_mes between 1 and 12), 0) as outros5"),
+                DB::raw("coalesce((select sum(v.rh98_valor) from rhdirfgeracaodadospessoalvalor v where v.rh98_rhdirftipovalor = 11 and v.rh98_rhdirfgeracaodadospessoal = rhdirfgeracaodadospessoal_outer.rh96_sequencial and v.rh98_mes between 1 and 12), 0) as molestia_grave_inativos"),
+                DB::raw("coalesce((select sum(v.rh98_valor) from rhdirfgeracaodadospessoalvalor v where v.rh98_rhdirftipovalor = 11 and v.rh98_rhdirfgeracaodadospessoal = rhdirfgeracaodadospessoal_outer.rh96_sequencial and v.rh98_mes = 13), 0) as molestia_grave_inativos_13"),
+                DB::raw("coalesce((select sum(v.rh98_valor) from rhdirfgeracaodadospessoalvalor v where v.rh98_rhdirftipovalor = 12 and v.rh98_rhdirfgeracaodadospessoal = rhdirfgeracaodadospessoal_outer.rh96_sequencial and v.rh98_mes between 1 and 12), 0) as molestia_grave_ativos"),
+                DB::raw("coalesce((select sum(v.rh98_valor) from rhdirfgeracaodadospessoalvalor v where v.rh98_rhdirftipovalor = 12 and v.rh98_rhdirfgeracaodadospessoal = rhdirfgeracaodadospessoal_outer.rh96_sequencial and v.rh98_mes = 13), 0) as molestia_grave_ativos_13"),
+                DB::raw("coalesce((select sum(v.rh98_valor) from rhdirfgeracaodadospessoalvalor v where v.rh98_rhdirftipovalor in (13,14) and v.rh98_rhdirfgeracaodadospessoal = rhdirfgeracaodadospessoal_outer.rh96_sequencial and v.rh98_mes between 1 and 12), 0) as plano_saude")
+            )
+            ->where('g.rh95_ano', $anoBase)
+            ->where('rhdirfgeracaodadospessoal_outer.rh96_numcgm', $numCgm)
+            ->whereExists(function ($q) use ($instituicao) {
+                $q->select(DB::raw(1))
+                    ->from('rhdirfgeracaodadospessoalvalor as v')
+                    ->whereColumn('v.rh98_rhdirfgeracaodadospessoal', 'rhdirfgeracaodadospessoal_outer.rh96_sequencial')
+                    ->where('v.rh98_instit', $instituicao);
+            })
+            ->first();
+        if ($rendimentos && $rendimentos->pensao > 0) {
+            $registros = str_replace(['{', '}'], '', $rendimentos->regist);
+            $pensionistas = DB::table('pensao')
+                ->join('cgm', 'r52_numcgm', '=', 'z01_numcgm')
+                ->whereIn('r52_regist', explode(',', $registros))
+                ->distinct()
+                ->pluck('z01_nome')
+                ->toArray();
+            $rendimentos->pensionistas = implode(', ', $pensionistas);
+        } else if ($rendimentos) {
+            $rendimentos->pensionistas = '';
+        }
+
+        return $rendimentos;
+    }
+
+    public function getAnosRendimento(int $numCgm, int $instituicao)
+    {
+        return DB::table('rhdirfgeracao')
+            ->join('rhdirfgeracaodadospessoal', 'rh95_sequencial', '=', 'rh96_rhdirfgeracao')
+            ->join('rhdirfgeracaodadospessoalvalor', 'rh96_sequencial', '=', 'rh98_rhdirfgeracaodadospessoal')
+            ->where('rh96_numcgm', $numCgm)
+            ->where('rh98_instit', $instituicao)
+            ->select('rh95_ano')
+            ->distinct()
+            ->orderBy('rh95_ano', 'desc')
+            ->pluck('rh95_ano');
+    }
 }

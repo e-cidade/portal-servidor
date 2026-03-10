@@ -37,7 +37,13 @@ const mainNavItems: NavItem[] = [
         href: '/contracheque',
         icon: DollarSign,
     },
-    
+
+    {
+        title: 'Rendimento IRRF',
+        href: '/rendimentos',
+        icon: DollarSign,
+    },
+
     {
         title: 'Alterar Senha',
         href: '/settings/password',
@@ -81,8 +87,8 @@ const mainNavItems: NavItem[] = [
         </SidebarHeader>
 
         <SidebarContent>
-            <NavMain :items="mainNavItems" />                     
-       
+            <NavMain :items="mainNavItems" />
+
             <SidebarMenuItem class="px-2 py-0">
                 <SidebarMenuButton as-child >
                     <Link class="block w-full" method="post" :href="route('logout')" @click="handleLogout" as="button">
@@ -91,7 +97,7 @@ const mainNavItems: NavItem[] = [
                     </Link>
                 </SidebarMenuButton>
             </SidebarMenuItem>
-    
+
         </SidebarContent>
 
         <SidebarFooter>
