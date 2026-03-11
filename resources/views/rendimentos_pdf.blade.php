@@ -58,8 +58,7 @@
         </tr>
     </table>
     <div>
-        <p>Verifique as condições e o prazo para a apresentação da Declaração do Imposto sobre a Renda da Pessoa Física para este ano - calendário no site
-            da Secretaria Especial da Receita Federal do Brasil na Internet, no endereço <https://www.gov.br/receitafederal/pt-br></p>
+        <p></p>
     </div>
     <table class="table">
         <tr>
@@ -163,7 +162,7 @@
     <table class="table">
         <tr>
             <td width="50%">
-                <span class="label">NOME:</span> {{ $instituicao->nomeinst }}<br>
+                <span class="label">NOME:</span> {{ $instituicao->pref }}<br>
                 <span class="label">DATA:</span> {{ date('d/m/Y') }}
             </td>
             <td class="text-center">
