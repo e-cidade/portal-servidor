@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
+use function Laravel\Prompts\table;
 
 class RhPessoalRepository
 {
@@ -415,10 +416,12 @@ class RhPessoalRepository
 
     public function getAnosRendimento(int $numCgm, int $instituicao)
     {
+        $cpf = DB::table('cgm')->where('z01_numcgm', $numCgm)->first();
+        $cgms = DB::table('cgm')->where('z01_cgccpf', $cpf->z01_cgccpf)->select('z01_numcgm')->get();
         return DB::table('rhdirfgeracao')
             ->join('rhdirfgeracaodadospessoal', 'rh95_sequencial', '=', 'rh96_rhdirfgeracao')
             ->join('rhdirfgeracaodadospessoalvalor', 'rh96_sequencial', '=', 'rh98_rhdirfgeracaodadospessoal')
-            ->where('rh96_numcgm', $numCgm)
+            ->whereIn('rh96_numcgm', $cgms->pluck('z01_numcgm')->toArray())
             ->where('rh98_instit', $instituicao)
             ->select('rh95_ano')
             ->distinct()
