@@ -6,6 +6,7 @@ use App\Http\Controllers\ContraChequeController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DependentesController;
 use App\Http\Controllers\FeriasController;
+use App\Http\Controllers\RendimentoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,5 +38,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('contracheque/imprimir', [ContraChequeController::class, 'gerarPDFContraCheque'])->name('relatorio.contracheque');
 
     Route::get('ferias', [FeriasController::class, 'index'])->name('ferias');
-    Route::get('rendimentos', [DashboardController::class, 'index'])->name('rendimentos');
+    Route::get('rendimentos', [RendimentoController::class, 'index'])->name('rendimentos');
+    Route::get('rendimentos/imprimir', [RendimentoController::class, 'gerarPDF'])->name('relatorio.rendimentos');
 });
