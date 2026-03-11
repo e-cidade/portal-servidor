@@ -423,6 +423,7 @@ class RhPessoalRepository
             ->join('rhdirfgeracaodadospessoalvalor', 'rh96_sequencial', '=', 'rh98_rhdirfgeracaodadospessoal')
             ->whereIn('rh96_numcgm', $cgms->pluck('z01_numcgm')->toArray())
             ->where('rh98_instit', $instituicao)
+            ->where('rh95_ano', '>', env('ANO_IMPLANTACAO', 2024))
             ->select('rh95_ano')
             ->distinct()
             ->orderBy('rh95_ano', 'desc')
