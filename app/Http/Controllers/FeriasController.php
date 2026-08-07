@@ -27,11 +27,12 @@ class FeriasController extends Controller
         $feriasGozadas = (object) [];
         if($matricula){
             $feriasGozadas = $this->rhPessoalRepository->getFeriasGozadas($matricula->rh01_regist, $matricula->rh02_anousu, $matricula->rh02_mesusu) ?? (object) [];
-            $feriasAGozar = $this->rhPessoalRepository->getFeriasAGozadas($matricula->rh01_regist, $matricula->rh02_anousu, $matricula->rh02_mesusu) ?? (object) [];
+            $feriasAGozar = $this->rhPessoalRepository->getFeriasAGozar($matricula->rh01_regist, $matricula->rh02_anousu, $matricula->rh02_mesusu) ?? (object) [];
+            //dd($feriasAGozar);
         }
         return Inertia::render('Ferias', [
             'feriasGozadas' => $feriasGozadas,
-            'feriasAGozar' => $feriasAGozar ? [$feriasAGozar] : [],
+            'feriasAGozar' => $feriasAGozar,
         ]);
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Repositories\RhPessoalRepository;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -39,13 +40,28 @@ class HandleInertiaRequests extends Middleware
     {
         [$message, $author] = str(Inspiring::quotes()->random())->explode('-');
 
+        $menuFerias = false;
+
+        if (
+            $request->user() &&
+            defined('CODIGOINSTITUICAO')
+        ) {
+            $menuFerias = app(RhPessoalRepository::class)
+                ->getMenuFerias(CODIGOINSTITUICAO);
+        }        
+
         return [
             ...parent::share($request),
-            'name' => config('app.name'),
+            'name'  => config('app.name'),
             'quote' => ['message' => trim($message), 'author' => trim($author)],
-            'auth' => [
+            'auth'  => [
                 'user' => $request->user(),
-            ],
+                       ],
+            'instituicao' => defined('CODIGOINSTITUICAO')
+                ? CODIGOINSTITUICAO
+                : null,
+
+            'menuFerias' => $menuFerias,
             'ziggy' => [
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),

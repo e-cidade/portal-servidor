@@ -134,11 +134,12 @@ class RhPessoalRepository
             ->where('r30_regist', $iMatric)
             ->where('r30_anousu', $ano)
             ->where('r30_mesusu', $mes)
+            ->orderByDesc('r30_perai')
             ->select('cadferia.*')
             ->paginate(5);
     }
 
-    public function getFeriasAGozadas(int $iMatric, int $iAno, int $iMes)
+    public function getFeriasAGozar(int $iMatric, int $iAno, int $iMes)
     {
         $subqueryX = DB::table('rhpessoal')
             ->join('rhpessoalmov', function ($join) use ($iAno, $iMes) {
@@ -170,6 +171,13 @@ class RhPessoalRepository
             ->whereNotNull('periodo_aquisitivo_inicial')
             ->whereNotNull('periodo_aquisitivo_final')
             ->get();
+    }
+
+    public function getMenuFerias(int $instit): bool
+    {
+        return DB::table('rhcfpessportal')
+            ->where('rh220_instit', $instit)
+            ->value('rh220_menuferias');
     }
 
     public function getTipoFolha($matric, $anousu, $mesusu)

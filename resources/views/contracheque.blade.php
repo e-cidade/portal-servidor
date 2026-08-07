@@ -176,8 +176,11 @@
             <td colspan="3"><span class="b">VÍNCULO: </span> {{ $colaborador->vinculo ?? ($vinculo ?? '—') }}</td>
         </tr>
         <tr>
-            <td colspan="3"><span class="b">BCO/AG/CONTA): </span>{{ $colaborador->banco . ' / ' .  $colaborador->agencia .'-'. $colaborador->dvagencia . ' / ' .  $colaborador->conta . '-' .  $colaborador->dvconta }}</td>
+            <td colspan="3"><span class="b">BCO/AG/CONTA: </span>{{ $colaborador->banco . ' / ' .  $colaborador->agencia .'-'. $colaborador->dvagencia . ' / ' .  $colaborador->conta . '-' .  $colaborador->dvconta }}</td>
             <td><span class="b">ADMISSÃO: </span>{{ \Carbon\Carbon::parse($colaborador->admiss)->format('d/m/Y') }}</td>
+        </tr>
+        <tr>
+          <td colspan="3"><span class="b">FÉRIAS: </span></td>
         </tr>
     </table>
 </div>
