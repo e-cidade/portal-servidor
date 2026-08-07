@@ -7,6 +7,7 @@ import { Instituicao, type NavItem } from '@/types';
 import { Link, router } from '@inertiajs/vue3';
 import { LayoutGrid , PersonStanding, TreePalm, DollarSign, LockKeyhole, LogOut} from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
+import { usePage } from '@inertiajs/vue3';
 
 defineProps<{
     instituicao: Instituicao;
@@ -15,6 +16,10 @@ defineProps<{
 const handleLogout = () => {
     router.flushAll();
 };
+
+const page = usePage();
+
+const menuFerias = page.props.menuFerias as boolean;
 
 const mainNavItems: NavItem[] = [
     {
@@ -27,11 +32,13 @@ const mainNavItems: NavItem[] = [
         href: '/dependentes',
         icon: PersonStanding,
     },
-    // {
-    //     title: 'Férias',
-    //     href: '/ferias',
-    //     icon: TreePalm,
-    // },
+...(menuFerias
+        ? [{
+            title: 'Férias',
+            href: '/ferias',
+            icon: TreePalm,
+        }]
+        : []),
     {
         title: 'Contra Cheque',
         href: '/contracheque',
