@@ -180,7 +180,9 @@
             <td><span class="b">ADMISSÃO: </span>{{ \Carbon\Carbon::parse($colaborador->admiss)->format('d/m/Y') }}</td>
         </tr>
         <tr>
-          <td colspan="3"><span class="b">FÉRIAS: </span></td>
+          @if ($colaborador->paramFerias && $colaborador->ferias->isNotEmpty())
+          <td colspan="3"><span class="b">FÉRIAS: </span>{{ $colaborador->ferias->implode(' | ') }}</td>
+          @endif
         </tr>
     </table>
 </div>

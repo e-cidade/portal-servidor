@@ -95,6 +95,26 @@ class ContraChequeController extends Controller
         $dados = $this->rhPessoalRepository->getRubricas($request->tipo_folha, $request->ano, $request->mes, $request->registro) ?? collect();
 
         $servidor = $this->rhPessoalRepository->getDadosServidor( $request->ano, $request->mes, $request->registro, CODIGOINSTITUICAO);
+
+        $paramFerias = $this->rhPessoalRepository->getParametrosFerias($request->ano, $request->mes, CODIGOINSTITUICAO);
+
+        $ferias = collect();
+
+        if($paramFerias) {
+
+            $periodoFerias = $this->rhPessoalRepository->getFeriasCompetencia($request->registro, $request->ano, $request->mes);
+
+            if ($periodoFerias->isNotEmpty()) {
+                $ferias = $periodoFerias->map(function ($feria) {
+                    return sprintf(
+                        '%s à %s',
+                        \Carbon\Carbon::parse($feria->data_inicio)->format('d/m/Y'),
+                        \Carbon\Carbon::parse($feria->data_fim)->format('d/m/Y')
+                    );
+                });
+            }
+        }
+                
         $empresa = (object)[
             'nome' => $servidor->nomeinst,
             'cnpj' => $servidor->cgc,
@@ -119,6 +139,8 @@ class ContraChequeController extends Controller
             'conta' => $servidor->rh44_conta,
             'dvconta' => $servidor->rh44_dvconta,
             'admiss'=> $servidor->rh01_admiss,
+            'ferias' => $ferias,
+            'paramFerias' => $paramFerias,
         ];
 
         $competencia = (object)['mes' => $request->mes, 'ano' => $request->ano];

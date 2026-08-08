@@ -173,11 +173,57 @@ class RhPessoalRepository
             ->get();
     }
 
+    public function getParametrosFerias(int $iAno, int $iMes, int $instituicao){
+        return DB::table('cfpess')
+        ->where('r11_anousu', '=', $iAno)
+        ->where('r11_mesusu', '=', $iMes)
+        ->where('r11_instit', '=', $instituicao)
+        ->value('r11_emiteferias');
+    }
+
     public function getMenuFerias(int $instit): bool
     {
         return DB::table('rhcfpessportal')
             ->where('rh220_instit', $instit)
             ->value('rh220_menuferias');
+    }
+
+    public function getFeriasCompetencia(int $iMatric, int $iAno, int $iMes){
+
+    $iCompetencia = sprintf('%04d/%02d', $iAno, $iMes);
+
+    return DB::table('cadferia')
+        ->selectRaw("
+            DISTINCT
+            COALESCE(r30_periodogozrecini, r30_per1i) AS data_inicio,
+            COALESCE(r30_periodogozrecfim, r30_per1f) AS data_fim
+        ")
+        ->where('r30_regist', $iMatric)
+        ->where(function ($query) use ($iAno, $iMes, $iCompetencia) {
+            $query
+                ->where(function ($query) use ($iAno, $iMes) {
+                    $query
+                        ->whereRaw("
+                            COALESCE(r30_periodogozrecini, r30_per1i)
+                            <= (
+                                make_date(?, ?, 1)
+                                + INTERVAL '1 month - 1 day'
+                            )::date
+                        ", [$iAno, $iMes])
+                        ->whereRaw("
+                            COALESCE(r30_periodogozrecfim, r30_per1f)
+                            >= make_date(?, ?, 1)
+                        ", [$iAno, $iMes]);
+                })
+                ->orWhereRaw("
+                    COALESCE(
+                        NULLIF(TRIM(r30_proc2), ''),
+                        r30_proc1
+                    ) = ?
+                ", [$iCompetencia]);
+        })
+        ->orderBy('data_inicio')
+        ->get();
     }
 
     public function getTipoFolha($matric, $anousu, $mesusu)
