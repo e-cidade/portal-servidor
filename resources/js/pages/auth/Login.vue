@@ -30,7 +30,7 @@ const submit = () => {
 </script>
 
 <template>
-    <AuthBase :title="instituicao.nomeinst" description="Entre com suas credenciais">
+    <AuthBase :title="instituicao?.nomeinst ?? ''" description="Entre com suas credenciais">
         <Head title="Acesso" />
         <div v-if="status" class="mb-4 text-center text-sm font-medium text-green-600">
             {{ status }}

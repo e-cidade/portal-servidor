@@ -239,7 +239,7 @@ const abrirRelatorio = () => {
                 <!-- <div class="bg-white shadow rounded-b-md mt-0 border border-ring/600">
                     <div class="bg-ring/100 font-bold px-4 py-2 text-ring/800">DADOS PESSOAIS</div>
                     <div class="grid grid-cols-2 gap-4 p-4 text-sm">
-                        <p><span class="font-semibold">Instituição:</span> {{ instituicao.nomeinst }}</p>
+                        <p><span class="font-semibold">Instituição:</span> {{ instituicao?.nomeinst }}</p>
                         <p><span class="font-semibold">Matrícula:</span> {{ matricula }}</p>
                         <p><span class="font-semibold">CPF:</span> {{ cpf }}</p>
                         <p><span class="font-semibold">RG:</span> {{ rg }}</p>

@@ -33,6 +33,8 @@ sudo chmod -R o+rx /opt /opt/contass/portal-servidor
 
 ```
 cd /opt/contass/
+cp .env.example .env
+
 ```
 
 ## Arquivo .env
@@ -55,13 +57,15 @@ cd /opt/contass/
 
 ```
 
+docker network create portaltransparencia_pm_transparencia
 docker compose up -d --build
+docker compose exec -it app php artisan migrate
 
 ```
 
 
 ### OBS.: 
- 1. Para todos os casos o portal vai rodar na porta 8091
+ 1. Para todos os casos o portal vai rodar na porta 80
  2. Todos os comandos devem ser rodados dentrodo conteiner
  3. caso necessário dê permissão de acesso ao ip do container para o postgres local
  4. Rode  as migrations dentro do container

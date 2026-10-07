@@ -11,6 +11,8 @@ use Illuminate\Support\ServiceProvider;
 use Inertia\Inertia;
 use Stancl\Tenancy\Events\TenancyEnded;
 use Stancl\Tenancy\Events\TenancyInitialized;
+use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
+use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -37,6 +39,30 @@ class AppServiceProvider extends ServiceProvider
         // Remember central default connection so we can restore it when tenancy ends
         $centralDefault = config('database.default');
         Config::set('database.central_default', $centralDefault);
+
+        // Se o tenant não for encontrado pelo domínio, segue com a conexão padrão do .env
+        InitializeTenancyByDomain::$onFail = function ($e, $request, $next) {
+            Log::info('[tenancy] Tenant não encontrado, usando conexão padrão do .env', [
+                'host' => $request->getHost(),
+            ]);
+
+            if (!defined('CODIGOINSTITUICAO')) {
+                define('CODIGOINSTITUICAO', env('CODIGOINSTITUICAO'));
+            }
+
+            Inertia::share([
+                'instituicao' => CODIGOINSTITUICAO,
+            ]);
+
+            DB::connection()->statement('SET search_path TO public, pessoal, protocolo, cadastro, configuracoes ');
+
+            return $next($request);
+        };
+
+        // Permite acesso pelos domínios centrais (ex.: localhost) usando a conexão padrão
+        PreventAccessFromCentralDomains::$abortRequest = function ($request, $next) {
+            return $next($request);
+        };
 
         // Configure tenant DB only AFTER tenancy is initialized
         Event::listen(TenancyInitialized::class, function (TenancyInitialized $event) {
