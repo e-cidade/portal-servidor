@@ -183,7 +183,13 @@ class RhPessoalRepository
 
     public function getMenuFerias(int $instit): bool
     {
-        return DB::table('rhcfpessportal')
+        $existe = DB::selectOne("select to_regclass('rhcfpessportal') is not null as existe")->existe;
+
+        if (!$existe) {
+            return false;
+        }
+
+        return (bool) DB::table('rhcfpessportal')
             ->where('rh220_instit', $instit)
             ->value('rh220_menuferias');
     }
